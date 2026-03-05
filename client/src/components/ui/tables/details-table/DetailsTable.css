@@ -1,0 +1,30 @@
+/* DetailsTable.css */
+
+.table--details {
+  margin-bottom: var(--margin-section-mid)
+}
+.table--details th {
+  color: var(--color-brand2);
+  text-align: end;
+  padding-right: 2ch;
+  text-transform: capitalize;
+}
+
+.table--details tr {
+  &:first-child th,
+  &:first-child td {
+    padding-top: unset;
+  }
+
+  &:last-child th,
+  &:last-child td {
+    padding-bottom: unset;
+  }
+}
+
+.table--details td,
+.table--details th {
+  white-space: pre;
+  vertical-align: top;
+  padding-bottom: 0.5rem;
+}
