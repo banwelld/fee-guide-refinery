@@ -4,6 +4,7 @@
 server/settings.env
 
 # Raw data / Sensitive documents
+server/services/sandbox
 server/data/
 *.pdf
 *.PDF

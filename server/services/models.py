@@ -9,24 +9,43 @@ from pydantic import BaseModel, Field
 # using pydantic to validate category and procedure models
 
 
-class Procedure(BaseModel):
+class FeeGuideEntry(BaseModel):
     code: str
-    name: str
-    fee_strategy: str
+    name: str = "UNNAMED_ENTRY"
+    has_PS_flag: bool = False
+    notes: list[str] = Field(default_factory=list)
+    original_lines: list[str] = Field(default_factory=list)
+
+    def concatenate_lines(self, is_first_two_only: bool = True):
+        """
+        **Description:**
+        Merges lines in the original_lines list and collapses the items.
+
+        **Arguments:**
+        *is_first_two_only* (bool):
+            True: Concatenate first 2 lines and collapse them into index 0
+            False: Concatenate all lines into a single string at index 0
+        """
+        if not self.original_lines:
+            return
+
+        if is_first_two_only and len(self.original_lines) >= 2:
+            self.original_lines[0:2] = [" ".join(self.original_lines[0:2])]
+        elif not is_first_two_only:
+            self.original_lines = [" ".join(self.original_lines)]
+
+
+class Procedure(FeeGuideEntry):
+    name: str = "UNNAMED_PROCEDURE"
+    fee_strategy: str = "NO_STRATEGY_ASSIGNED"
     fee_min_cents: int = 0
     fee_max_cents: int = 0
     has_L_flag: bool = False
     has_E_flag: bool = False
-    has_PS_FLAG: bool = False
-    message: Union[str, None] = None
-    notes: Union[str, None] = None
 
 
-class Category(BaseModel):
-    code: str
-    name: Union[str, None] = None
-    has_PS_flag: bool = False
-    notes: Union[str, None] = None
+class Category(FeeGuideEntry):
+    name: str = "UNNAMED_CATEGORY"
     children: List[Union["Category", "Procedure"]] = Field(default_factory=list)
 
 

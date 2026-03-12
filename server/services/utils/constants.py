@@ -10,18 +10,14 @@ PATTERN = {
         "START": "",
         "END": "",
     },
-    "JUNK": {
-        "HEADER": "",
-        "FOOTER": "",
-    },
-    "EXPENSE": {
+    "expense": {
         "LAB": "",
-        "EXTRA_BILLING": "",
+        "MATERIALS": "",
     },
-    "FEE_STRATEGY": {
+    "fee_strategy": {
         "FEE": "",
         "FEE_RANGE": "",
-        "NO_FEE": "",
+        "no_fee": "",
         "IC": "",
     },
 }
