@@ -73,7 +73,7 @@ class FeeGuideEntry(db.Model, SerializerMixin):
     fee_strategy = db.Column(db.String, nullable=False, default="STANDARD")
     has_L_flag = db.Column(db.Boolean, nullable=True, default=False)
     has_E_flag = db.Column(db.Boolean, nullable=True, default=False)
-    has_PS_flag = db.Column(db.Boolean, nullable=Tre, default=False)
+    has_PS_flag = db.Column(db.Boolean, nullable=True, default=False)
     fee_guide_id = db.Column(db.Integer, db.ForeignKey("fee_guides.id"), nullable=False)
     entry_id = db.Column(db.Integer, db.ForeignKey("entries.id"), nullable=False)
     fee_guide = db.relationship("FeeGuide", back_populates="fee_guide_entries")
@@ -81,3 +81,23 @@ class FeeGuideEntry(db.Model, SerializerMixin):
 
     def __repr__(self):
         return f"<< FeeGuideEntry: entry={self.entry_id} -- {self.fee_strategy} -- min={self.fee_min_cents} >>"
+
+
+class Client(db.Model, SerializerMixin):
+    __tablename__ = "clients"
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False)
+    telephone = db.Column(db.String, nullable=False)
+    concurrent_logins = db.Column(db.Integer, nullable=True)
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
+    updated_at = db.Column(db.DateTime, onupdate=db.func.now())
+
+    def __repr__(self):
+        return f"<< ENTRY: {self.name} >>"
+
+    @validates("name", "telephone")
+    def validate_strings(self, key, value):
+        if not value or not value.strip():
+            raise ValueError(f"{key.replace('_', ' ')} cannot be empty")
+        return value.strip()
