@@ -15,9 +15,7 @@ load_dotenv(dotenv_path=env_path)
 # Instantiate app, set attributes
 
 raw_url = (
-    os.getenv("REMOTE_DB_URL")
-    or os.getenv("LOCAL_DB_URL")
-    or os.getenv("DATABASE_URL")
+    os.getenv("REMOTE_DB_URL") or os.getenv("LOCAL_DB_URL") or os.getenv("DATABASE_URL")
 )
 if raw_url and raw_url.startswith("postgres://"):
     DB_URL = raw_url.replace("postgres://", "postgresql://", 1)
@@ -40,7 +38,11 @@ app.secret_key = SECRET_KEY or os.urandom(32)
 
 metadata = MetaData(
     naming_convention={
+        "ix": "ix_%(column_0_label)s",
+        "uq": "uq_%(table_name)s_%(column_0_name)s",
+        "ck": "ck_%(table_name)s_%(constraint_name)s",
         "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
+        "pk": "pk_%(table_name)s",
     }
 )
 db = SQLAlchemy(metadata=metadata)
