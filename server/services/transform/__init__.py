@@ -1,7 +1,6 @@
-from .pre_process.junk_remover import remove_junk_from_text
+from .pre_process.normalize_fee_guide import normalize_fee_guide
+from .pre_process.remove_junk_lines import remove_junk_lines
 
-__all__ = [
-    "remove_junk_from_text",
-]
+__all__ = ["remove_junk_lines", "normalize_fee_guide"]
 
 print("Transform is good to go!")

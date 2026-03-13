@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from collections import deque
 from typing import Any, Dict, Iterator, List
 
 
@@ -10,15 +11,15 @@ def _extract_section(
     is_primed = False
 
     for line in line_iterator:
-        if is_primed and terminal_key in line:
-            break
+        yield line
 
-        if precursor_key in line:
+        if line == precursor_key:
             is_primed = True
-            continue
+        elif is_primed:
+            if line == terminal_key:
+                break
 
-        if is_primed:
-            yield line
+            is_primed = False
 
 
 def drop_junk(section_lines: Iterator[str], junk_config: Dict[str, Any]) -> List[str]:
@@ -35,7 +36,9 @@ def drop_junk(section_lines: Iterator[str], junk_config: Dict[str, Any]) -> List
     good_lines = []
 
     for line in section_lines:
-        if any(p in line for p in string_patterns):
+        if any(
+            p in line for p in string_patterns if not (line.endswith(p) and p != line)
+        ):
             continue
 
         if any(
@@ -49,7 +52,7 @@ def drop_junk(section_lines: Iterator[str], junk_config: Dict[str, Any]) -> List
     return good_lines
 
 
-def remove_junk_from_text(
+def remove_junk_lines(
     text_from_pdf: Iterator, junk_config: List[Dict[str, Any]]
 ) -> List[str]:
     remaining_lines = []
@@ -67,8 +70,7 @@ def remove_junk_from_text(
                 remaining_lines.extend(filtered_lines)
         elif method_name == "drop_all":
             # Consume and discard the generator entirely
-            for _ in raw_section_lines:
-                pass
+            deque(raw_section_lines, maxlen=0)
         else:
             raise ValueError(f"Invalid junk removal method: {method_name}")
 

@@ -4,7 +4,9 @@ from pathlib import Path
 from typing import Iterator, Union
 
 import pdfplumber
-from utils.validators import (
+from werkzeug.datastructures import FileStorage
+
+from services.utils.validators import (
     has_valid_bytes,
     has_valid_mimetype,
     has_valid_suffix,
@@ -12,7 +14,6 @@ from utils.validators import (
     is_valid_type,
     path_destination_exists,
 )
-from werkzeug.datastructures import FileStorage
 
 
 def _clean_page_text(text: str) -> Iterator:

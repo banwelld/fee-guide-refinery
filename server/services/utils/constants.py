@@ -1,24 +1,13 @@
 #!/usr/bin/env python3
 
-# global fee guide parsing patterns
-# empty values represent globally needed items that differ guide-to-guide
-PATTERN = {
-    "DOLLARS": r"(?:\d{1,3}(?:,\d{3})+|\d+)",
-    "CENTS": r"(?:\.\d{2})",
-    "PROCEDURE_CODE": r"\d{5}",
-    "ROW": {
-        "START": "",
-        "END": "",
-    },
-    "expense": {
-        "LAB": "",
-        "MATERIALS": "",
-    },
-    "fee_strategy": {
-        "FEE": "",
-        "FEE_RANGE": "",
-        "no_fee": "",
-        "IC": "",
-    },
-}
-PATTERN["FEE"] = rf"(?:\$)?(?:{PATTERN['DOLLARS']}{PATTERN['CENTS']})"
+from pathlib import Path
+
+# the project's base path and data path for raw files and test output
+BASE_DIR = Path(__file__).resolve().parent.parent
+DATA_DIR = BASE_DIR.parent / "data"
+
+DOLLARS = (r"(?:\d{1,3}(?:,\d{3})+|\d+)",)
+CENTS = r"(?:\.\d{2})"
+
+FEE = rf"(?:\$)?({DOLLARS}{CENTS})"
+FEE_RANGE = rf"{FEE}.{{3,5}}{FEE}"
