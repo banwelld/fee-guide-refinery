@@ -39,6 +39,21 @@ class Procedure(Entry):
     has_L_flag: bool = False
     has_E_flag: bool = False
 
+    def info_dump(self):
+        print("\n{'=' * 40}")
+        print(f"CODE:{' ' * 10}{self.code}".center(40))
+        print("-" * 40)
+        print(f"NAME:{' ' * 10}{self.name}".center(40))
+        print("-" * 40)
+        print(f"FEE STRATEGY:{' ' * 10}{self.fee_strategy}".center(40))
+        print("-" * 40)
+        print(
+            f"MIN FEE:{' ' * 4}$ {self.fee_min_cents / 100}{' ' * 8}MIN FEE:{' ' * 4}$ {self.fee_min_cents / 100}".center(
+                40
+            )
+        )
+        print("=" * 40)
+
     @model_validator(mode="after")
     def no_negative_min_fee(self):
         if self.fee_min_cents < 0:
@@ -61,6 +76,13 @@ class Procedure(Entry):
 class Category(Entry):
     name: str = "UNNAMED_CATEGORY"
     children: List[Union["Category", "Procedure"]] = Field(default_factory=list)
+
+    def info_dump(self):
+        print("\n\n" + "=" * 40)
+        print(f"CODE:{' ' * 10}{self.code}".center(40))
+        print("-" * 40)
+        print(f"NAME:{' ' * 10}{self.name}".center(40))
+        print("=" * 40)
 
 
 # support self-referencing and recursive types

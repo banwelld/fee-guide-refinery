@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 
 import datetime
+import re
 
+import bcrypt
 from config import db
 from services.utils.enums import ProvinceCode, Specialty
 from sqlalchemy.ext.associationproxy import association_proxy
@@ -59,14 +61,6 @@ class Entry(db.Model, SerializerMixin):
 
 
 class FeeGuideEntry(db.Model, SerializerMixin):
-    __tablename__ = "fee_guide_entries"
-
-    __table_args__ = (
-        db.UniqueConstraint("fee_guide_id", "entry_id", name="_fee_guide_entry_uc"),
-    )
-
-    serialize_rules = ("-fee_guide", "-entry.order_entries")
-
     id = db.Column(db.Integer, primary_key=True)
     fee_min_cents = db.Column(db.Integer, nullable=False, default=0)
     fee_max_cents = db.Column(db.Integer, nullable=False, default=0)
@@ -76,6 +70,8 @@ class FeeGuideEntry(db.Model, SerializerMixin):
     has_PS_flag = db.Column(db.Boolean, nullable=True, default=False)
     fee_guide_id = db.Column(db.Integer, db.ForeignKey("fee_guides.id"), nullable=False)
     entry_id = db.Column(db.Integer, db.ForeignKey("entries.id"), nullable=False)
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
+    updated_at = db.Column(db.DateTime, onupdate=db.func.now())
     fee_guide = db.relationship("FeeGuide", back_populates="fee_guide_entries")
     entry = db.relationship("Entry", back_populates="order_entries", lazy="joined")
 
@@ -101,3 +97,42 @@ class Client(db.Model, SerializerMixin):
         if not value or not value.strip():
             raise ValueError(f"{key.replace('_', ' ')} cannot be empty")
         return value.strip()
+
+
+class User(db.Model, SerializerMixin):
+    __tablename__ = "fee_guide_entries"
+
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.string, nullable=False, default=0)
+    email = db.Column(db.String, nullable=False)
+    role = db.Column(db.string, nullable=False, default=0)
+    _password_hash = db.Column(db.String, nullable=False, default="STANDARD")
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
+    updated_at = db.Column(db.DateTime, onupdate=db.func.now())
+
+    @hybrid_property
+    def password(self):
+        return self._password_hash
+
+    @password.setter
+    def password(self, password):
+        password = bcrypt.generate_password_hash(password)
+        self._password_hash = password.decode("utf-8")
+
+    def authenticate(self, password):
+        return bcrypt.check_password_hash(self._password_hash, password)
+
+    @validates("email")
+    def validate_email(self, key, address):
+        if not address or not re.match(r"[^@]+@[^@]+\.[^@]+", address):
+            raise ValueError("Invalid email address format")
+        return address
+
+    @validates("role")
+    def validate_role(self, key, role):
+        if role not in ["level_1", "level_2", "level_3"]:
+            raise ValueError("Invalid user role")
+        return role
+
+    def __repr__(self):
+        return f"<< FeeGuideEntry: entry={self.username} -- {self.email} -- min={self.role} >>"

@@ -55,14 +55,14 @@ if __name__ == "__main__":
         print(header_outline + "\n")
 
         for record in results[:10]:
-            print(record)
+            record.info_dump()
 
         print("\n\n" + header_outline)
         print("--- Last 10 Records ---".center(header_chars))
         print(header_outline + "\n")
 
         for record in results[-10:]:
-            print(record)
+            record.info_dump()
         print("\n")
 
     except Exception as e:
