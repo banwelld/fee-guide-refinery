@@ -56,7 +56,6 @@ def _parse_category(
     ps_flag = expense_patterns.get("PS")
     has_PS = False
 
-    # Check for the PS flag after concatenation
     if _check_string_match(remaining_text, ps_flag):
         has_PS = True
         remaining_text = remaining_text.replace(ps_flag, "")
@@ -87,17 +86,14 @@ def _parse_procedure(
     full_text = " ".join(bundle)
     remaining_text = full_text.replace(code, "", 1)
 
-    # 1. Expunge the fee artifacts detected earlier
     remaining_text = remaining_text.replace(fee_data["raw_match"], "")
 
-    # 2. Handle the Expense Flags
     l_flag = expense_patterns.get("L")
     e_flag = expense_patterns.get("E")
 
     has_L = False
     has_E = False
 
-    # Check for the flags
     if _check_string_match(remaining_text, l_flag):
         has_L = True
         remaining_text = remaining_text.replace(l_flag, "")
@@ -106,11 +102,9 @@ def _parse_procedure(
         has_E = True
         remaining_text = remaining_text.replace(e_flag, "")
 
-    # Expunge any leftover "and/or" joiners between flags
     if "and/or" in remaining_text:
         remaining_text = remaining_text.replace("and/or", "")
 
-    # 3. Final Polish
     final_name = _clean_and_collapse_whitespace(remaining_text)
 
     return Procedure(

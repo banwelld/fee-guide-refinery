@@ -1,71 +1,86 @@
 import re
-from typing import Dict, List
+from typing import Any, Dict, List
 
 
-def _apply_operator(line: str, pattern: any, operator: str) -> bool:
-    """Helper to apply the comparison logic defined in NORM_CONFIG."""
+def _matches_rule(line: str, pattern: Any, operator: str) -> bool:
+    """
+    Does this line match the pattern using the given operator?
+    """
     clean_line = line.strip()
+
     if operator == "exact_match":
         if isinstance(pattern, (list, tuple)):
             return clean_line in pattern
         return clean_line == pattern
+
     if operator == "endswith":
         return clean_line.endswith(pattern)
+
     if operator == "regex_match":
         return bool(re.match(pattern, clean_line))
+
     return False
 
 
-def _merge_fragment_with_next(lines: List[str], rule: Dict) -> List[str]:
+def _run_merge_strategy(lines: List[str], rule: Dict) -> List[str]:
     """
-    Helper that identifies lines that were poorly formed in the original document
-    (text shoehorned in after the fee info) and that were broken in extraction
-    because of that.
+    Walks through the lines and merges an anchor with the line immediately
+    following it if they match the rule.
     """
-    next_pass = []
-    i = 0
-    while i < len(lines):
-        line = lines[i]
-        if (
-            i + 1 < len(lines)
-            and _apply_operator(line, rule["anchor_match"], rule["anchor_operator"])
-            and _apply_operator(
-                lines[i + 1],
-                rule["fragment_match"],
-                rule["fragment_operator"],
+    processed_lines = []
+    skip_next = False
+
+    for i in range(len(lines)):
+        if skip_next:
+            skip_next = False
+            continue
+
+        current_line = lines[i]
+
+        if i + 1 < len(lines):
+            next_line = lines[i + 1]
+
+            is_anchor = _matches_rule(
+                current_line, rule["anchor_match"], rule["anchor_operator"]
             )
-        ):
-            next_pass.append(f"{line} {lines[i + 1]}")
-            i += 2
-        else:
-            next_pass.append(line)
-            i += 1
-    return next_pass
+            is_fragment = _matches_rule(
+                next_line, rule["fragment_match"], rule["fragment_operator"]
+            )
+
+            if is_anchor and is_fragment:
+                processed_lines.append(f"{current_line} {next_line}")
+                skip_next = True
+                continue
+
+        processed_lines.append(current_line)
+
+    return processed_lines
 
 
-def _append_fragment_to_prev(lines: List[str], rule: Dict) -> List[str]:
+def _run_append_strategy(lines: List[str], rule: Dict) -> List[str]:
     """
-    Helper that identifies lines that broke because the nonstandard language
-    made them far too long. Because this is critical data, it appends the
-    fragment to the original line.
+    If a line is a fragment, attach it onto the end of the previous line.
     """
-    next_pass = []
+    processed_lines = []
+
     for line in lines:
-        if next_pass and _apply_operator(
+        if processed_lines and _matches_rule(
             line, rule["fragment_match"], rule["fragment_operator"]
         ):
-            next_pass[-1] = f"{next_pass[-1]} {line}"
+            last_line = processed_lines[-1]
+            processed_lines[-1] = f"{last_line} {line}"
         else:
-            next_pass.append(line)
-    return next_pass
+            processed_lines.append(line)
+
+    return processed_lines
 
 
-def _join_separated(lines: List[str], rule: Dict) -> List[str]:
+def _run_join_separated_strategy(lines: List[str], rule: Dict) -> List[str]:
     """
-    Reunites fragments that were appended to the line in a previous
-    pass but are positioned incorrectly.
+    Finds a fragment that is already on the line but in the wrong spot,
+    and moves it to its anchor.
     """
-    next_pass = []
+    processed_lines = []
     anchor = rule["anchor"]
     fragment = rule["fragment"]
 
@@ -74,49 +89,49 @@ def _join_separated(lines: List[str], rule: Dict) -> List[str]:
             clean_line = line.replace(f" {fragment}", "").replace(fragment, "").strip()
 
             new_line = clean_line.replace(anchor, f"{anchor} {fragment}")
-            next_pass.append(new_line)
+            processed_lines.append(new_line)
         else:
-            next_pass.append(line)
+            processed_lines.append(line)
 
-    return next_pass
+    return processed_lines
 
 
-def _standardize(lines: List[str], rule: Dict) -> List[str]:
+def _run_standardize_strategy(lines: List[str], rule: Dict) -> List[str]:
     """
-    Purely string replacement for nonstandard namings or fee strategies that
-    deviate slightly from standard but keep enough of the cannonical underpinnings
-    that they still qualify as a conventional strategy.
+    Simple find-and-replace for specific strings.
     """
-    next_pass = []
+    processed_lines = []
+    target = rule["replace"]
+    canonical = rule["cannonical"]
+
     for line in lines:
-        next_pass.append(line.replace(rule["replace"], rule["cannonical"]))
-    return next_pass
+        processed_lines.append(line.replace(target, canonical))
 
-
-STRATEGY_MAP = {
-    "merge_fragment_with_next": _merge_fragment_with_next,
-    "append_fragment_to_prev": _append_fragment_to_prev,
-    "join_separated": _join_separated,
-    "standardize": _standardize,
-}
+    return processed_lines
 
 
 def normalize_fee_guide(fee_guide_lines: List[str], config: List[Dict]) -> List[str]:
     """
-    **Description:**
-    Orchestrates the normalization process, which ensures that translation errors from
-    PDF extraction are fixed along with replacing any nonstandard/regional terminology
-    that is not widely used elsewhere.
+    Orchestrates the normalization "passes" based on the rules in config.
     """
     current_lines = list(fee_guide_lines)
 
     for rule in config:
-        strategy_name = rule.get("strategy")
-        strategy_func = STRATEGY_MAP.get(strategy_name)
+        strategy = rule.get("strategy")
 
-        if strategy_func:
-            current_lines = strategy_func(current_lines, rule)
+        if strategy == "merge_fragment_with_next":
+            current_lines = _run_merge_strategy(current_lines, rule)
+
+        elif strategy == "append_fragment_to_prev":
+            current_lines = _run_append_strategy(current_lines, rule)
+
+        elif strategy == "join_separated":
+            current_lines = _run_join_separated_strategy(current_lines, rule)
+
+        elif strategy == "standardize":
+            current_lines = _run_standardize_strategy(current_lines, rule)
+
         else:
-            print(f"Warning: No helper found for strategy: '{strategy_name}'")
+            print(f"Warning: Unknown strategy, '{strategy}'")
 
     return current_lines
