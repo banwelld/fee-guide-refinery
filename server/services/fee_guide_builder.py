@@ -7,7 +7,12 @@ from typing import Iterator, List, Union
 from werkzeug.datastructures import FileStorage
 
 from services.extract import generate_text_from_pdf
-from services.transform import normalize_fee_guide, remove_junk_lines
+from services.models import Category, Procedure
+from services.transform import (
+    normalize_fee_guide,
+    remove_junk_lines,
+    transform_lines_to_models,
+)
 from services.utils.config import FEE_GUIDE_CONFIG
 from services.utils.enums import ProvinceCode, Specialty
 
@@ -20,14 +25,14 @@ CONFIG = FEE_GUIDE_CONFIG[PROV][SPEC][YEAR]
 
 def build_fee_guide(
     pdf_source: Union[FileStorage, str], config: dict, password: str = None
-) -> List[str]:
+) -> List[Union[Category, Procedure]]:
     raw_text: Iterator = generate_text_from_pdf(pdf_source, password)
     clean_lines: List[str] = remove_junk_lines(raw_text, config["junk_strategy"])
     normalized_lines: list[str] = normalize_fee_guide(
         clean_lines, config["normalization_rules"]
     )
 
-    return normalized_lines
+    return transform_lines_to_models(normalized_lines, config, PROV, SPEC, YEAR)
 
 
 if __name__ == "__main__":
@@ -43,26 +48,21 @@ if __name__ == "__main__":
     try:
         results = build_fee_guide(pdf_source=str(pdf_path), config=CONFIG)
         print("\n✅ Pipeline completed successfully!")
-        print(f"\nTotal clean lines extracted: {len(results)}")
-
-        write_text_to_file(
-            "\n".join(results),
-            "/Users/Mosaic_1/Development/Code/projects/phase-5-project/fee-guide-refinery/server/data/test/test_output.txt",
-        )
+        print(f"\nTotal records extracted: {len(results)}")
 
         print("\n\n" + header_outline)
-        print("***  First 200 Lines  ***".center(header_chars))
+        print("***  First 10 Records  ***".center(header_chars))
         print(header_outline + "\n")
 
-        for line in results[:200]:
-            print(line)
+        for record in results[:10]:
+            print(record)
 
         print("\n\n" + header_outline)
-        print("--- Last 200 Lines ---".center(header_chars))
+        print("--- Last 10 Records ---".center(header_chars))
         print(header_outline + "\n")
 
-        for line in results[-200:]:
-            print(line)
+        for record in results[-10:]:
+            print(record)
         print("\n")
 
     except Exception as e:
