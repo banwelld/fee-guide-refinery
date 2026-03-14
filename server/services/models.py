@@ -23,15 +23,15 @@ class FeeGuide(BaseModel):
         return self
 
 
-class Entry(FeeGuide):
+class ScheduleItem(FeeGuide):
     code: str
-    name: str = "UNNAMED_ENTRY"
+    name: str = "UNNAMED_ITEM"
     has_PS_flag: bool = False
     notes: List[str] = Field(default_factory=list)
     original_lines: List[str] = Field(default_factory=list)
 
 
-class Procedure(Entry):
+class Procedure(ScheduleItem):
     name: str = "UNNAMED_PROCEDURE"
     fee_strategy: str = "NO_STRATEGY_ASSIGNED"
     fee_min_cents: int = 0
@@ -73,7 +73,7 @@ class Procedure(Entry):
         return self
 
 
-class Category(Entry):
+class Category(ScheduleItem):
     name: str = "UNNAMED_CATEGORY"
     children: List[Union["Category", "Procedure"]] = Field(default_factory=list)
 

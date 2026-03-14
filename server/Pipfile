@@ -4,7 +4,6 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-flask = "*"
 flask-sqlalchemy = "*"
 flask-migrate = "*"
 flask-restful = "*"
@@ -17,6 +16,8 @@ alembic = "*"
 pytest = "*"
 pdfplumber = "*"
 pydantic = "*"
+flask = "*"
+sqlalchemy-serializer = "*"
 
 [dev-packages]
 
