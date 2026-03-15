@@ -1,3 +1,9 @@
+export const UserRoles = Object.freeze({
+  MANAGER: 'manager',
+  USER: 'businessUser',
+  ADMIN: 'dataAdmin',
+});
+
 export const DataTypes = {
   FUNCTION: 'function',
   NUMBER: 'number',
