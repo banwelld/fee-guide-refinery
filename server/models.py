@@ -3,9 +3,8 @@
 import datetime
 import re
 
-import bcrypt
-from config import db
-from namespace import Messages as Msg
+from config import bcrypt, db
+from namespace import Message as Msg
 from services.utils.enums import ProvinceCode, Specialty
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.ext.hybrid import hybrid_property
@@ -15,6 +14,7 @@ from sqlalchemy_serializer import SerializerMixin
 
 class FeeGuide(db.Model, SerializerMixin):
     __tablename__ = "fee_guides"
+    serialize_rules = ("-account.fee_guides", "-fee_guide_items.fee_guide")
 
     id = db.Column(db.Integer, primary_key=True)
     province_code = db.Column(db.Enum(ProvinceCode), nullable=False)
@@ -22,8 +22,8 @@ class FeeGuide(db.Model, SerializerMixin):
     year_effective = db.Column(db.Integer, nullable=False)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
-    client_id = db.Column(db.Integer, db.ForeignKey("clients.id"), nullable=False)
-    client = db.relationship("Client", back_populates="fee_guides")
+    account_id = db.Column(db.Integer, db.ForeignKey("accounts.id"), nullable=False)
+    account = db.relationship("Account", back_populates="fee_guides")
     fee_guide_items = db.relationship(
         "FeeGuideItem", back_populates="fee_guide", cascade="all, delete-orphan"
     )
@@ -41,10 +41,11 @@ class FeeGuide(db.Model, SerializerMixin):
 
 class ScheduleItem(db.Model, SerializerMixin):
     __tablename__ = "schedule_items"
+    serialize_rules = ("-fee_guide_items.schedule_item",)
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
-    item_type = db.Column(db.String, nullable=False)
+    code = db.Column(db.String, nullable=False)
     parent_category = db.Column(db.String, nullable=True)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
@@ -64,6 +65,7 @@ class ScheduleItem(db.Model, SerializerMixin):
 
 class FeeGuideItem(db.Model, SerializerMixin):
     __tablename__ = "fee_guide_items"
+    serialize_rules = ("-fee_guide.fee_guide_items", "-schedule_item.fee_guide_items")
 
     id = db.Column(db.Integer, primary_key=True)
     fee_min_cents = db.Column(db.Integer, nullable=False, default=0)
@@ -85,24 +87,24 @@ class FeeGuideItem(db.Model, SerializerMixin):
         return f"<< ITEM: id={self.id} {self.fee_guide.province_code} {self.fee_guide.year_effective}>>"
 
 
-class Client(db.Model, SerializerMixin):
-    __tablename__ = "clients"
+class Account(db.Model, SerializerMixin):
+    __tablename__ = "accounts"
+    serialize_rules = ("-fee_guides.account", "-users.account")
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
     telephone = db.Column(db.String, nullable=False)
-    concurrent_logins = db.Column(db.Integer, nullable=True)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
     fee_guides = db.relationship(
-        "FeeGuide", back_populates="client", cascade="all, delete-orphan"
+        "FeeGuide", back_populates="account", cascade="all, delete-orphan"
     )
     users = db.relationship(
-        "User", back_populates="client", cascade="all, delete-orphan"
+        "User", back_populates="account", cascade="all, delete-orphan"
     )
 
     def __repr__(self):
-        return f"<< CLIENT: {self.name} >>"
+        return f"<< ACCOUNT: {self.name} >>"
 
     @validates("name", "telephone")
     def validate_strings(self, key, value):
@@ -113,16 +115,17 @@ class Client(db.Model, SerializerMixin):
 
 class User(db.Model, SerializerMixin):
     __tablename__ = "users"
+    serialize_rules = ("-account.users", "-_password_hash")
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, nullable=False)
     email = db.Column(db.String, nullable=False)
-    role = db.Column(db.String, nullable=False, default="level_1")
+    role = db.Column(db.String, nullable=False, default="business_user")
     _password_hash = db.Column(db.String, nullable=False)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
-    client_id = db.Column(db.Integer, db.ForeignKey("clients.id"), nullable=False)
-    client = db.relationship("Client", back_populates="users")
+    account_id = db.Column(db.Integer, db.ForeignKey("accounts.id"), nullable=False)
+    account = db.relationship("Account", back_populates="users")
 
     @hybrid_property
     def password(self):
@@ -144,7 +147,8 @@ class User(db.Model, SerializerMixin):
 
     @validates("role")
     def validate_role(self, key, role):
-        if role not in ["level_1", "level_2", "level_3"]:
+        valid_roles = ["manager", "business_user", "data_admin"]
+        if role not in valid_roles:
             raise ValueError(Msg.ROLE_INVALID)
         return role
 

@@ -26,7 +26,7 @@ SECRET_KEY = os.getenv("APP_SECRET_KEY")
 
 app = Flask(
     __name__,
-    static_folder=os.path.abspath("../client/build"),
+    static_folder=os.path.abspath("../account/build"),
     static_url_path="",
 )
 app.config["SQLALCHEMY_DATABASE_URI"] = DB_URL
