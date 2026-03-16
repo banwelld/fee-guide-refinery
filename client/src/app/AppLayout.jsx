@@ -4,7 +4,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 import Header from '../features/header/components/Header';
 import ModalLayer from '../components/ui/feedback/ModalLayer';
 import ToasterLayer from '../components/ui/feedback/ToasterLayer';
-import PATHS from '../../../server/data/paths';
+import PATHS from '../config/paths';
 
 export default function AppLayout() {
   const { pathname } = useLocation();
