@@ -1,13 +1,10 @@
 import App from '../app/App';
 import AppLayout from '../app/AppLayout';
-import AuthView from '../features/homepage/pages/PublicView';
+import PublicView from '../features/homepage/pages/PublicView';
+import GridView from '../features/collection/pages/grid-view/pages/GridView';
 import ErrorPage from '../pages/ErrorPage';
 
-import {
-  AdminRoute,
-  GuestRoute,
-  ProtectedRoute,
-} from '../components/utility/Guards';
+import { AdminRoute, PublicRoute, ProtectedRoute } from '../components/Guards';
 import PATHS from './paths';
 
 const routes = [
@@ -21,7 +18,22 @@ const routes = [
           {
             errorElement: <ErrorPage />,
             children: [
-              { index: true, element: <PublicView /> },
+              {
+                index: true,
+                element: (
+                  <PublicRoute>
+                    <PublicView />
+                  </PublicRoute>
+                ),
+              },
+              {
+                path: PATHS.FRONT.DASHBOARD,
+                element: (
+                  <ProtectedRoute>
+                    <GridView />
+                  </ProtectedRoute>
+                ),
+              },
               { path: '*', element: <ErrorPage /> },
             ],
           },

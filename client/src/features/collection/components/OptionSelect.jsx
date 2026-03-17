@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
-import { toBemClassName } from '../../../../../utils/helpers';
-import { DataTypes } from '../../../../../config/constants';
+import { toBemClassName } from '../../../utils/helpers';
+import { DataTypes } from '../../../config/constants';
 
 const normalizeItems = (item) =>
   typeof item === DataTypes.STRING ? { value: item, label: item } : item;
@@ -16,7 +16,12 @@ const normalizeItems = (item) =>
 /**
  * @param {ListSelectorProps}
  */
-export default function OptionSelect({ items, selected, setState, bemBlock }) {
+export default function OptionSelect({
+  items,
+  selected,
+  setState,
+  bemBlock = 'toolbar',
+}) {
   const normalizedItems = useMemo(() => items.map(normalizeItems), [items]);
 
   return (

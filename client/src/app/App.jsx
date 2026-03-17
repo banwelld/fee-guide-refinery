@@ -1,25 +1,29 @@
 import { Outlet } from 'react-router-dom';
 
-import { ModalProvider } from '../contexts/ModalContext';
 import { UserProvider } from '../features/user/context/UserContext';
-import { CartProvider } from '../features/cart/context/CartContext';
-import useUser from '../features/user/hooks/useUser';
+import { CollectionProvider } from '../features/collection/context/CollectionContext';
+import { ModalProvider } from '../features/feedback/context/ModalContext';
+import useUser from '../features/user/context/useUser';
 
 export default function App() {
   return (
     <UserProvider>
-      <AppProviders>
-        <Outlet />
-      </AppProviders>
+      <ModalProvider>
+        <AppProviders>
+          <Outlet />
+        </AppProviders>
+      </ModalProvider>
     </UserProvider>
   );
 }
 
 function AppProviders({ children }) {
-  const { user } = useUser();
+  const userContext = useUser();
+  const user = userContext?.user;
+
   return (
     <CollectionProvider key={user?.id ?? 'guest'}>
-      <CartProvider key={user?.id ?? 'guest'}>{children}</CartProvider>
+      {children}
     </CollectionProvider>
   );
 }

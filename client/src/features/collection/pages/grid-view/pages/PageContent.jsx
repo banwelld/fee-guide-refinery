@@ -1,4 +1,4 @@
-import FeeGuideList from '../../components/FeeGuideList';
+import FeeGuideList from '../../../components/FeeGuideList';
 
 export default function PageContent() {
   return (

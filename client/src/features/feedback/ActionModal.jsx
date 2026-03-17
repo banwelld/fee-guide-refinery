@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
-import Button from '../Button';
-import { toBemClassName } from '../../../utils/helpers';
+import Button from '../../components/ui/Button';
+import { toBemClassName } from '../../utils/helpers';
 import './ActionModal.css';
 
 export default function ActionModal({
@@ -44,22 +44,19 @@ export default function ActionModal({
         bemBlock,
         bemMod2: 'active',
         showMod2: isOpen,
-      })}
-    >
+      })}>
       <div
         className={toBemClassName({
           bemBlock,
           bemElem: 'container',
           bemMod: 'contents',
-        })}
-      >
+        })}>
         <div
           className={toBemClassName({
             bemBlock,
             bemElem: 'container',
             bemMod: 'ui-text',
-          })}
-        >
+          })}>
           {uiText}
         </div>
         {children && (
@@ -68,8 +65,7 @@ export default function ActionModal({
               bemBlock,
               bemElem: 'container',
               bemMod: 'children',
-            })}
-          >
+            })}>
             {children}
           </div>
         )}
@@ -78,8 +74,7 @@ export default function ActionModal({
             bemBlock,
             bemElem: 'container',
             bemMod: 'button',
-          })}
-        >
+          })}>
           {hasConfirmButton && (
             <Button
               label={confirmLabel}

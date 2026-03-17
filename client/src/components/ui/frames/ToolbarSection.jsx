@@ -15,18 +15,9 @@ import './ToolbarSection.css';
 /** @param {ToolbarProps} props */
 
 export default function ToolbarSection({ children, isRoot, ...rest }) {
-  const {
-    heading = 'Options',
-    hasPageHeading,
-    subHeading: uiText,
-    bemBlock = 'toolbar',
-    bemMod,
-    bemMod2 = isRoot ? 'root' : undefined,
-    showMod2 = isRoot ? true : undefined,
-  } = rest;
+  const { heading = 'Options', hasPageHeading, subHeading: uiText } = rest;
 
-  const bemRoot = { bemBlock, bemMod, bemMod2, showMod2 };
-  const sectionProps = { heading, hasPageHeading, uiText, bemRoot };
+  const sectionProps = { heading, hasPageHeading, uiText };
 
   return <SectionFrame {...sectionProps}>{children}</SectionFrame>;
 }

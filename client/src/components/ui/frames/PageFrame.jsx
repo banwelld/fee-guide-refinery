@@ -1,6 +1,5 @@
 import { toBemClassName } from '../../../utils/helpers';
 import '../css/buttons.css';
-import '../../../css/form.css';
 
 /**
  * **PageFrame component**

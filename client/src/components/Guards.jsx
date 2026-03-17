@@ -2,13 +2,13 @@ import { Navigate } from 'react-router-dom';
 
 import toast from 'react-hot-toast';
 
-import useUser from '../../features/user/hooks/useUser';
+import useUser from '../features/user/context/useUser';
 
-import ErrorPage from '../../pages/ErrorPage';
+import ErrorPage from '../pages/ErrorPage';
 
-import Feedback from '../../config/feedback';
-import { UserRole } from '../../config/enums';
-import PATHS from '../../config/paths';
+import Feedback from '../config/feedback';
+import { UserRole } from '../config/constants';
+import PATHS from '../config/paths';
 
 const { Toasts } = Feedback;
 
@@ -27,7 +27,7 @@ export function AdminRoute({ children }) {
 /**
  * redirects logged-in users away from Auth pages
  */
-export function GuestRoute({ children }) {
+export function PublicRoute({ children }) {
   const { isLoggedIn, sessionLoaded } = useUser();
 
   if (!sessionLoaded) return null;
@@ -47,7 +47,8 @@ export function ProtectedRoute({ isCustomersOnly, children }) {
   if (!sessionLoaded) return null;
 
   const isAdmissible = isCustomersOnly
-    ? isLoggedIn && user?.role === UserRole.CUSTOMER
+    ? isLoggedIn
+      && (user?.role === UserRole.USER || user?.role === UserRole.MANAGER)
     : isLoggedIn;
 
   if (isAdmissible) return children;

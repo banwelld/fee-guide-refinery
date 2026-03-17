@@ -31,23 +31,25 @@ export default function AuthForm({ onSubmit }) {
 
   return (
     <Formik {...formikProps}>
-      <Form className='form, form--auth'>
+      <Form className='form form--auth'>
         <FormikInput
           name={Fields.EMAIL}
+          label={'Email'}
           as={Input.INPUT}
           type={Input.EMAIL}
-          placeholder='corporate email address'
+          placeholder='e.g., john.doe@domain.com'
           autoComplete='username'
           autoFocus={true}
-          className='form__input, form__input--input'
+          className='form__input form__input--input'
         />
         <FormikInput
           name={Fields.PASSWORD}
+          label={'Password'}
           as={Input.INPUT}
           type={Input.PASSWORD}
-          placeholder='password'
+          placeholder=''
           autoComplete='current-password'
-          className='form__input, form__input--input'
+          className='form__input form__input--input'
         />
         <Button type='submit' label={'Login'} className='page-utility' />
       </Form>

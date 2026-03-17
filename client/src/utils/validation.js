@@ -1,5 +1,5 @@
 import * as yup from 'yup';
-import { DEFAULT_SELECT_VALUE } from '../config/enums';
+import { DEFAULT_SELECT_VALUE } from '../config/constants';
 
 const REQUIRED = '** Required Field **';
 

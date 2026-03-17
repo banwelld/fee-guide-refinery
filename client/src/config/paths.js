@@ -1,5 +1,3 @@
-import { AuthViewMode as AuthMode } from './enums';
-
 const PATHS = Object.freeze({
   FRONT: {
     DASHBOARD: '/dashboard',
@@ -13,12 +11,12 @@ const PATHS = Object.freeze({
     CONTACT_US: '/contact',
   },
   BACK: {
-    GUIDES: '/api/guides',
-    GUIDE_ID: (id) => `/api/guides/${id}`,
-    LISTINGS: '/api/listings',
-    LISTING_ID: (id) => `/api/listings/${id}`,
-    PROCEDURES: '/api/procedures',
-    PROCEDURE_ID: (id) => `/api/procedures/${id}`,
+    GUIDES: '/api/fee-guides',
+    GUIDE_ID: (id) => `/api/fee-guides/${id}`,
+    GUIDE_ITEMS: '/api/fee-guide-items',
+    GUIDE_ITEM_ID: (id) => `/api/fee-guide-items/${id}`,
+    SCHEDULE_ITEMS: '/api/schedule-items',
+    SCHEDULE_ITEM_ID: (id) => `/api/schedule-items/${id}`,
     SESSION: '/api/session',
     USERS: '/api/users',
     USER_ID: (id) => `/api/users/${id}`,

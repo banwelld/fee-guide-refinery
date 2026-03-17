@@ -1,5 +1,5 @@
-import { UserRole as Role } from '../../../../config/constants';
-import PATHS from '../../../../config/paths';
+import { UserRole as Role } from '../../config/constants';
+import PATHS from '../../config/paths';
 
 export const NAV_LINK_CONFIG = [
   {

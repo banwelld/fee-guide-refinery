@@ -1,9 +1,12 @@
-import ToolbarSection from '../../../../components/ui/frames/ToolbarSection';
+import ToolbarSection from '../../../components/ui/frames/ToolbarSection';
 
-export default function Toolbar({ toolbarontrols }) {
+export default function Toolbar({ toolbarControls }) {
   return (
-    <ToolbarSection isRoot bemMod='auth'>
-      {toolbarontrols}
-    </ToolbarSection>
+    <section className='sidebar__container'>
+      <header>
+        <h2>Members</h2>
+      </header>
+      {toolbarControls}
+    </section>
   );
 }

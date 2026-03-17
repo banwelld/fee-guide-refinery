@@ -1,4 +1,11 @@
-import { createContext, useState, useEffect, useRef, useMemo } from 'react';
+import {
+  createContext,
+  useState,
+  useEffect,
+  useContext,
+  useRef,
+  useMemo,
+} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createUserController } from './UserController';
 
@@ -6,17 +13,17 @@ export const UserContext = createContext(null);
 
 /**
  * @typedef {Object} UserProviderReturn
- * @property {Object} user - current user object
- * @property {boolean} isLoggedIn - whether the user is currently logged in
+ * @property {Object|null} user - current user object
+ * @property {boolean} isLoggedIn - whether a user is currently logged in (!!user)
+ * @property {boolean} sessionLoaded - whether the initial session check has completed
  * @property {boolean} isPending - whether a user action is currently in progress
  * @property {{
- *   login: function(Object): Promise<void>,
- *   register: function(Object): Promise<void>,
+ *   login: function(Object): Promise<Object>,
  *   logout: function(): Promise<void>
  * }} userAuth - authentication methods
  * @property {{
- *   updateUser: function(Object): Promise<void>,
- *   deleteUser: function(): Promise<void>,
+ *   register: function(Object): Promise<Object>,
+ *   updateUser: function(Object): Promise<Object>,
  * }} userAdmin - user management methods
  */
 
@@ -59,12 +66,15 @@ export function UserProvider({ children }) {
   const ctx = useMemo(() => {
     return {
       user,
-      isLoggedIn: sessionLoaded,
+      isLoggedIn: !!user,
+      sessionLoaded,
       userAuth,
       userAdmin,
       isPending,
     };
-  }, [user, isPending, userAuth, userAdmin, isLoggedIn]);
+  }, [user, isPending, userAuth, userAdmin, sessionLoaded]);
 
   return <UserContext.Provider value={ctx}>{children}</UserContext.Provider>;
 }
+
+export const useUser = () => useContext(UserContext);

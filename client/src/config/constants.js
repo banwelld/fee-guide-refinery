@@ -1,9 +1,11 @@
-export const UserRoles = Object.freeze({
+export const DEFAULT_SELECT_VALUE = 'DEFAULT_SELECT_VALUE';
+
+export const UserRole = {
+  ADMIN: 'data_admin',
   MANAGER: 'manager',
-  USER: 'businessUser',
-  ADMIN: 'dataAdmin',
-  PUBLIC: 'unknown',
-});
+  USER: 'business_user',
+  PUBLIC: 'public',
+};
 
 export const DataTypes = {
   FUNCTION: 'function',

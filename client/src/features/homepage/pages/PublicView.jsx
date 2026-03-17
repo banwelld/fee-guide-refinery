@@ -1,22 +1,19 @@
 import { useNavigate } from 'react-router-dom';
-import { NavLink } from 'react-router-dom';
-
 import toast from 'react-hot-toast';
 
-import useUser from '../context/useUser';
+import useUser from '../../user/context/useUser';
 
 import PageContent from './PageContent';
-import Toolbar from '../Toolbar';
-import AuthForm from '../../components/AuthForm';
-import PageFrame from '../../../../components/ui/frames/PageFrame';
+import Toolbar from './Toolbar';
+import AuthForm from '../../user/components/AuthForm';
+import PageFrame from '../../../components/ui/frames/PageFrame';
 
-import Feedback from '../../../../config/feedback';
-import PATHS from '../../../../config/paths';
-import { LinkLabel as LL } from '../../../../config/constants';
+import Feedback from '../../../config/feedback';
+import PATHS from '../../../config/paths';
 
 const { Toasts } = Feedback;
 
-export default function AuthView() {
+export default function PublicView() {
   const navigate = useNavigate();
   const { isLoggedIn, userAuth } = useUser();
   const { login } = userAuth;

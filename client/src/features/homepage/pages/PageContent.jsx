@@ -1,5 +1,5 @@
-import ContentSection from '../../../../components/ui/frames/ContentSection';
-import { Headings, UiText } from '../../../../config/constants';
+import ContentSection from '../../../components/ui/frames/ContentSection';
+import { Headings, UiText } from '../../../config/constants';
 
 export default function PageContent() {
   const sectionProps = {

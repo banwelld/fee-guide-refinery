@@ -1,5 +1,5 @@
 import { useRouteError } from 'react-router-dom';
-import Header from '../features/header/components/Header';
+import Header from '../features/header/Header';
 import ContentSection from '../components/ui/frames/ContentSection';
 import { Headings, UiText } from '../config/constants';
 

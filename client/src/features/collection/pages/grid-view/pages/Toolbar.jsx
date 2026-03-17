@@ -1,5 +1,5 @@
 import { Headings } from '../../../../../config/constants';
-import OptionSelect from '../components/OptionSelect';
+import OptionSelect from '../../../components/OptionSelect';
 import ToolbarSection from '../../../../../components/ui/frames/ToolbarSection';
 
 export default function Toolbar({ config, pageName, heading, subHeading }) {

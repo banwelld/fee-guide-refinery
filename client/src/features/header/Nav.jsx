@@ -1,6 +1,6 @@
-import { NAV_LINK_CONFIG as CONFIG } from './header-nav/navLinkConfig';
-import useUser from '../../user/hooks/useUser';
-import NavLayout from './header-nav/NavLayout';
+import { NAV_LINK_CONFIG as CONFIG } from './navLinkConfig';
+import NavLayout from './NavLayout';
+import useUser from '../user/context/useUser';
 
 export default function Nav() {
   const { user } = useUser();
