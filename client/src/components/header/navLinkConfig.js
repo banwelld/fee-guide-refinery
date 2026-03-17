@@ -3,7 +3,7 @@ import PATHS from '../../../../config/paths';
 
 export const NAV_LINK_CONFIG = [
   {
-    path: PATHS.FRONT.LANDING,
+    path: PATHS.FRONT.DASHBOARD,
     label: 'Fee Guide List',
     visibleTo: [Role.MANAGER, Role.USER, Role.ADMIN],
   },
@@ -18,7 +18,7 @@ export const NAV_LINK_CONFIG = [
     visibleTo: [Role.MANAGER],
   },
   {
-    path: PATHS.FRONT.ACCESS,
+    path: PATHS.FRONT.USER_ACCESS,
     label: 'Manage Access',
     visibleTo: [Role.MANAGER],
   },
@@ -26,5 +26,10 @@ export const NAV_LINK_CONFIG = [
     path: PATHS.FRONT.EXPORT,
     label: 'Add/Update Products',
     visibleTo: [Role.MANAGER, Role.ADMIN],
+  },
+  {
+    path: PATHS.FRONT.CONTACT_US,
+    label: 'Contact Info',
+    visibleTo: [Role.PUBLIC],
   },
 ];

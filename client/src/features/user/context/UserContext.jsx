@@ -17,7 +17,7 @@ export const UserContext = createContext(null);
  * @property {{
  *   updateUser: function(Object): Promise<void>,
  *   deleteUser: function(): Promise<void>,
- * }} userActions - user management methods
+ * }} userAdmin - user management methods
  */
 
 /**
@@ -31,7 +31,7 @@ export function UserProvider({ children }) {
   const lastUserRef = useRef(null);
   const navigate = useNavigate();
   // create controller (useMemo prevents loops when controller functions used as dependencies)
-  const { checkSession, userAuth, userActions } = useMemo(() => {
+  const { checkSession, userAuth, userAdmin } = useMemo(() => {
     const concurrencyControls = {
       lockRef: isBusyRef,
       setPending: setIsPending,
@@ -61,10 +61,10 @@ export function UserProvider({ children }) {
       user,
       isLoggedIn: sessionLoaded,
       userAuth,
-      userActions,
+      userAdmin,
       isPending,
     };
-  }, [user, isPending, userAuth, userActions, isLoggedIn]);
+  }, [user, isPending, userAuth, userAdmin, isLoggedIn]);
 
   return <UserContext.Provider value={ctx}>{children}</UserContext.Provider>;
 }

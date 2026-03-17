@@ -1,3 +1,5 @@
+import { NavLink } from 'react-router-dom';
+
 export default function NavLayout({ linkConfig }) {
   return (
     <ul className='list--nav-links'>

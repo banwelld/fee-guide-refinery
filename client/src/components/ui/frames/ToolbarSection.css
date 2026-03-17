@@ -1,20 +1,20 @@
-.sidebar {
+.toolbar {
   padding: 1rem 0 2rem;
 }
 
-.sidebar__section {
+.toolbar__section {
   display: flex;
   flex-direction: column;
   justify-content: start;
   align-items: center;
 }
 
-.sidebar__section > .sidebar__section {
+.toolbar__section > .toolbar__section {
   width: fit-content;
   margin-bottom: var(--margin-section-min);
 }
 
-.sidebar__header {
+.toolbar__header {
   width: 100%;
   text-align: center;
   color: var(--color-brand2);
@@ -22,16 +22,16 @@
   padding: 0 2ch;
 }
 
-.sidebar__header > h1 {
+.toolbar__header > h1 {
   font-size: 2.6rem;
   font-weight: 700;
 }
 
-.sidebar__header > h2 {
+.toolbar__header > h2 {
   font-size: 1.8rem;
 }
 
-.sidebar__ui-text {
+.toolbar__ui-text {
   font-weight: 500;
   padding: 0.5rem 0;
   text-align: center;
@@ -40,13 +40,13 @@
   border-bottom: var(--border-strong);
 }
 
-.sidebar__list {
+.toolbar__list {
   display: block;
   list-style: none;
   width: fit-content;
 }
 
-.sidebar__list-item {
+.toolbar__list-item {
   color: var(--color-frame-med);
   display: block;
   font-weight: 600;
@@ -61,14 +61,15 @@
     background: hsl(from var(--color-brand1) h s l / 0.5);
   }
 
-  &.sidebar__list-item--selected {
+  &.toolbar__list-item--selected {
     color: var(--color-brand2);
     font-weight: 600;
     background: hsl(from var(--color-brand1) h s l / 0.7);
   }
 }
 
-.sidebar input, .sidebar select {
+.toolbar input,
+.toolbar select {
   border: none;
   width: 90%;
   box-shadow: var(--shadow-inset);
@@ -76,22 +77,22 @@
   padding: 0.5rem 2ch;
 }
 
-.sidebar input {
+.toolbar input {
   border-radius: var(--border-radius-max);
   height: 2rem;
   margin-bottom: 1rem;
 }
 
-.sidebar select {
+.toolbar select {
   border-radius: var(--border-radius-min);
   scrollbar-width: none;
   -ms-overflow-style: none;
-    
+
   &::-webkit-scrollbar {
     display: none;
   }
 }
 
-.sidebar__section p {
+.toolbar__section p {
   text-align: center;
 }

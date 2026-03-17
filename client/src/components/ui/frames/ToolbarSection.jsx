@@ -1,8 +1,8 @@
 import SectionFrame from './SectionFrame';
-import './SidebarSection.css';
+import './ToolbarSection.css';
 
 /**
- * @typedef SidebarProps
+ * @typedef ToolbarProps
  * @property {string} [heading]
  * @property {number} [headingLevel]
  * @property {string} [subHeading]
@@ -12,14 +12,14 @@ import './SidebarSection.css';
  * @property {React.ReactNode} children
  */
 
-/** @param {SidebarProps} props */
+/** @param {ToolbarProps} props */
 
-export default function SidebarSection({ children, isRoot, ...rest }) {
+export default function ToolbarSection({ children, isRoot, ...rest }) {
   const {
     heading = 'Options',
     hasPageHeading,
     subHeading: uiText,
-    bemBlock = 'sidebar',
+    bemBlock = 'toolbar',
     bemMod,
     bemMod2 = isRoot ? 'root' : undefined,
     showMod2 = isRoot ? true : undefined,

@@ -10,7 +10,7 @@ export default function AppLayout() {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    if (pathname !== PATHS.FRONT.HOME) {
+    if (pathname !== PATHS.FRONT.LOGIN) {
       window.scrollTo(0, 0);
     }
   }, [pathname]);

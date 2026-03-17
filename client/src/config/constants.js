@@ -2,6 +2,7 @@ export const UserRoles = Object.freeze({
   MANAGER: 'manager',
   USER: 'businessUser',
   ADMIN: 'dataAdmin',
+  PUBLIC: 'unknown',
 });
 
 export const DataTypes = {
@@ -13,27 +14,40 @@ export const DataTypes = {
 
 export const Headings = {
   FG_REFINERY: 'Fee Guide Refinery',
+  FG_REFINERY_LOGO: 'Fee Guide Refinery logo',
+  AUTH_MAIN: 'Provincial fee guide loading... Without the hassle!',
+  AUTH_LOAD: 'Automated extraction from PDF',
+  AUTH_OUTPUT: 'Configurable output formats (JSON, CSV, text)',
+  AUTH_COMPLIANT: '100% dental association compliance',
+  AUTH_SECURE: 'Role-based controls',
+  DASHBOARD_HEAD: 'Fee Guide Collection',
+  DASHBOARD_SUBHEAD: 'Manage and refine your provincial dental fee guides.',
+};
+
+export const LinkLabel = {
+  REFINE: 'Refine Fee Guide',
 };
 
 export const UiText = {
-  CART_EMPTY: [
-    `Your cart is empty. Click on the 'Home' link in the header to do some
-    shopping`,
+  AUTH_MAIN: [
+    `Fee Guide Refinery eliminates the manual effort of provincial dental fee guide management. Upload a PDF and walk away — your structured data is ready in seconds.`,
+    `Built for benefits administrators, insurers, and dental software teams who need accurate, association-aligned fee data without the spreadsheet chaos.`,
   ],
-  CHECKOUT_CONFIRMATION: [
-    `If the above information is correct, click the 'submit' button to complete
-    your order. We will notify you via email of payment options.`,
+  AUTH_LOAD: [
+    `Our extraction engine reads provincial fee guide PDFs directly — no copy-paste, no reformatting, no manual entry.`,
+    `Procedure codes, fee amounts, indicators, and categories are identified and structured automatically, even as fee guide formats change year over year.`,
   ],
-  CHECKOUT_DELIVERY: [
-    `Please enter tha delivery address for your order and click the 'Save'
-    button. Once the address is saved, you'll be able to click 'Next' to
-    advance to the order confirmation page.`,
+  AUTH_OUTPUT: [
+    `Extracted data is delivered in the format your workflow demands: JSON for API integration, CSV for spreadsheet import, or plain text for legacy systems.`,
+    `Every export is clean, consistently structured, and ready to load without transformation.`,
   ],
-  CHECKOUT_USER_INFO: [
-    `Please confirm your user information by clicking the checkbox below. If
-      the information is out of date or incorrect, use the 'click here' link
-      to update it. Once it's updated, click next to enter the delivery
-      address.`,
+  AUTH_COMPLIANT: [
+    `Fee Guide Refinery is built against published Canadian Dental Association procedure code standards and validated against provincial association guides.`,
+    `You get data you can trust — structured the way dental associations intended it.`,
+  ],
+  AUTH_SECURE: [
+    `Access is organized by role: Managers control account configuration and user access, Business Users submit and retrieve fee guide data, and Data Admins manage extraction and export operations.`,
+    `Each user sees only the tools and data relevant to their function.`,
   ],
   GENERAL_ERROR: [
     <strong>ERROR 404:</strong>,
@@ -42,73 +56,15 @@ export const UiText = {
     links above to navigate through the site. If the error persists, feel free
     to call our support desk to report the error.`,
   ],
-  INVALID_PRODUCT_ID: (id) => [
-    <strong>INVALID ID:</strong>,
-    `We have no product in our collection with ID '${id}'.`,
-  ],
-  INVALID_PRODUCT_SELECTION: [
-    `The product that you selected is not valid. Please choose another from
-      the list.`,
-  ],
-  LOGIN: [
-    `In order to provide you with products of the highest quality and at the
-    best prices, we must have an active and engaged membership. As such,
-    you'll need to login to the site to take advantage of Grocery2Go's
-    benefits.`,
-    `Not a member yet? We'd love to have you sign up!`,
-  ],
   MISSING_CONFIG: [
     `Configuration file is missing or invalid. Cannot render page. If this
     persists, please contact suport.`,
   ],
-  NO_ORDERS: [`You have no orders to display.`],
   NOT_LOGGED_IN: [
     <strong>ERROR 401:</strong>,
     `You must be logged in to view this page. Please login or register to continue.`,
   ],
-  ORDER: [
-    `Here's your order! You can click on a product's name to visit its
-    information page where you can add it to your current shopping cart.`,
-  ],
-  PREV_ORDERS: [
-    `Here is a list of your previous orders. You can click on an order's date
-    to view its product list and details, to cancel an unfulfilled order, or
-    to delete a cancelled order.`,
-  ],
-  REGISTER: [
-    `We're thrilled that you've decided to create an account! Just give us a
-    little info about yourself and you'll be all ready to load up a shopping
-    cart with gourmet ingredients and farm fresh meats and produce.`,
-    `All fields are mandatory so be sure to complete the entire form. Your
-    password must consist of at least 10 characters with a lowercase and
-    uppercase character, a digit and a special character (e.g., !@#$%).`,
-  ],
-  SUMMARY: [
-    `Hover over any row to reveal controls. You can click on a product's name
-    to visit its page or click the up or down buttons to make sure you have
-    enough of a product. The trash button removes a product completely.`,
-    `Wanna checkout? Just click the 'Check me Out!' button below the product
-    list.`,
-  ],
-  USER_PROFILE: [
-    `Welcome to your profile. Feel free to browse your personal information or
-    your previous orders list.`,
-    `If you notice that your information needs updating or would like to update
-    your password, you'll find an update button in the sidebar. And, although
-    we'd hate to see you close your account, we understand that people
-    sometimes have to do that. You'll find that option in the sidebar, as
-    well.`,
-  ],
-  USER_INFO_CONFIRM: [
-    `By checking this box, I affirm that the above information is accurate
-    and complete.`,
-  ],
-  WRONG_USER: [
-    <strong>ERROR 403:</strong>,
-    `You've attempted to access a profile with an ID that doesn't match the ID
-      that you're logged into. Please use the 'View my Profile' link or enter
-      the URL with your correct ID.`,
-  ],
+  NO_FEE_GUIDES: ['Your collection is empty. Start by adding a new fee guide.'],
 };
 
 export const InputTypes = Object.freeze({

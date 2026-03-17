@@ -1,4 +1,4 @@
-export default function Icon({ path }) {
+export default function SvgIcon({ path }) {
   const svgProps = {
     fill: 'currentColor',
     viewBox: '0 -960 960 960',

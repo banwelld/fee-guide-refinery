@@ -1,4 +1,5 @@
-import Nav from '.Nav';
+import Nav from './Nav';
+import Banner from './Banner';
 
 export default function Header() {
   return (

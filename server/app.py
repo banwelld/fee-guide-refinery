@@ -13,7 +13,7 @@ from flask import (
     session,
 )
 from flask_restful import Resource
-from helpers import make_error, make_message
+from helpers import find_falsey, find_req_fields, make_error, make_message
 from models import Account, FeeGuide, FeeGuideItem, ScheduleItem, User
 from namespace import Message as Msg
 
@@ -91,8 +91,35 @@ class AllAccounts(GetAllResource):
 api.add_resource(AllAccounts, "/accounts")
 
 
-class AllUsers(GetAllResource):
-    model = User
+class AllUsers(Resource):
+    def get(self):
+        item_list = [i.to_dict() for i in User.query.all()]
+        return make_response(item_list, 200)
+
+    def post(self):
+        if g.user:
+            return make_error(Msg.UNAUTHORIZED, 403)
+
+        data = request.json or {}
+        required_fields = find_req_fields(User)
+        if falsey := find_falsey({k: data.get(k) for k in required_fields}):
+            return make_error(Msg.MISSING_FIELDS, 422, fields=falsey)
+
+        if User.query.filter_by(email=data.get("email")).first():
+            return make_error(Msg.EMAIL_TAKEN, 422)
+
+        try:
+            new_user = User(**data)
+            db.session.add(new_user)
+            db.session.commit()
+
+            if request.args.get("action_type") == "register":
+                session["user_id"] = new_user.id
+
+            return make_response(new_user.to_dict(), 201)
+        except Exception as e:
+            db.session.rollback()
+            return make_response({"error": str(e)}, 422)
 
 
 api.add_resource(AllUsers, "/users")
@@ -138,6 +165,31 @@ class Session(Resource):
         if not g.user:
             return make_response(jsonify(None), 200)
         return make_response(g.user.to_dict(), 200)
+
+    def post(self):
+        data = request.json or {}
+        if not data:
+            return make_error(Msg.NO_DATA, 400)
+
+        required = ["email", "password"]
+        if falsey := find_falsey({k: data.get(k) for k in required}):
+            return make_error(Msg.MISSING_FIELDS, 422, fields=falsey)
+
+        user = User.query.filter(User.email == data.get("email")).first()
+        if not user:
+            # timing attack mitigation
+            bcrypt.check_password_hash(DUMMY_HASH, data.get("password"))
+            return make_error(Msg.INVALID_CREDS, 401)
+
+        if not user.authenticate(data.get("password")):
+            return make_error(Msg.INVALID_CREDS, 401)
+
+        session["user_id"] = user.id
+        return make_response(user.to_dict(), 200)
+
+    def delete(self):
+        session.clear()
+        return make_message(Msg.LOGGED_OUT)
 
 
 api.add_resource(Session, "/session")

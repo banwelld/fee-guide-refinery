@@ -1,5 +1,6 @@
 import App from '../app/App';
 import AppLayout from '../app/AppLayout';
+import AuthView from '../features/homepage/pages/PublicView';
 import ErrorPage from '../pages/ErrorPage';
 
 import {
@@ -20,7 +21,7 @@ const routes = [
           {
             errorElement: <ErrorPage />,
             children: [
-              { index: true, element: <AuthView /> },
+              { index: true, element: <PublicView /> },
               { path: '*', element: <ErrorPage /> },
             ],
           },

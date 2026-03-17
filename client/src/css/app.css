@@ -1,0 +1,136 @@
+:root {
+  --base-bg: #f8fafc;
+  --card-bg: rgba(255, 255, 255, 0.8);
+  --primary-color: #2563eb;
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+  --border-color: #e2e8f0;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.fg-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1rem;
+}
+
+.fg-card {
+  display: flex;
+  align-items: center;
+  background: var(--card-bg);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-color);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow-sm);
+  gap: 2rem;
+}
+
+.fg-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary-color);
+}
+
+.fg-card__logo-container {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border-radius: 0.75rem;
+  padding: 0.5rem;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+}
+
+.fg-card__logo {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.fg-card__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.fg-card__header {
+  display: flex;
+  flex-direction: column;
+}
+
+.fg-card__province {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--primary-color);
+  letter-spacing: 0.05em;
+}
+
+.fg-card__title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin: 0;
+}
+
+.fg-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.fg-card__specialty {
+  background: #f1f5f9;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-weight: 500;
+}
+
+.fg-card__actions {
+  display: flex;
+  align-items: center;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 0.75rem;
+  transition: all 0.2s;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn--primary {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+}
+
+.btn--primary:hover {
+  background: #1d4ed8;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.loading-state,
+.empty-state {
+  text-align: center;
+  padding: 4rem;
+  color: var(--text-muted);
+  background: var(--card-bg);
+  border-radius: 1rem;
+  border: 2px dashed var(--border-color);
+}

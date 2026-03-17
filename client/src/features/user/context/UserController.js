@@ -129,7 +129,7 @@ export function createUserController({
 
   return {
     checkSession,
-    userAuth: { login, register, logout },
-    userActions: { updateUser },
+    userAuth: { login, logout },
+    userAdmin: { register, updateUser },
   };
 }

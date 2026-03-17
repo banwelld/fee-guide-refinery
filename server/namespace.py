@@ -8,6 +8,11 @@ class Message(str, Enum):
     EMAIL_INVALID = "Invalid email address"
     NOT_AUTHENTICATED = "User is not authenticated."
     UNAUTHORIZED = "User credentials do not align with request."
+    MISSING_FIELDS = "Missing required fields: {fields}"
+    EMAIL_TAKEN = "Email address already in use."
+    NO_DATA = "No data provided."
+    INVALID_CREDS = "Invalid email or password."
+    LOGGED_OUT = "Logout successful."
 
     def __call__(self, **kwargs):
-        self.value.format(**kwargs)
+        return self.value.format(**kwargs) if kwargs else self.value

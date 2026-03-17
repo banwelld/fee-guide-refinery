@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { UserContext } from '../context/UserContext';
+import { UserContext } from './UserContext';
 
 /**
  * @typedef {Object} UseUserReturn
@@ -14,7 +14,7 @@ import { UserContext } from '../context/UserContext';
  * @property {{
  *   updateUser: function(Object): Promise<void>,
  *   deleteUser: function(): Promise<void>,
- * }} userActions - user management methods
+ * }} userAdmin - user management methods
  */
 
 /**
