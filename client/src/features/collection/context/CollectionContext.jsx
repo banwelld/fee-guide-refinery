@@ -35,13 +35,14 @@ export function CollectionProvider({ children }) {
   const ctx = useMemo(
     () => ({
       feeGuides,
+      getFeeGuides,
       createFeeGuide,
       updateFeeGuide,
       deleteFeeGuide,
       isPending,
       findFeeGuide: (id) => feeGuides.find((g) => g.id === id),
     }),
-    [feeGuides, isPending, createFeeGuide, updateFeeGuide, deleteFeeGuide],
+    [feeGuides, isPending, getFeeGuides, createFeeGuide, updateFeeGuide, deleteFeeGuide],
   );
 
   return (

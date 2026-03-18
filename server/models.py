@@ -81,6 +81,7 @@ class FeeGuideItem(db.Model, SerializerMixin):
     schedule_item_id = db.Column(
         db.Integer, db.ForeignKey("schedule_items.id"), nullable=False
     )
+    parent_category = db.Column(db.String, nullable=True)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
     updated_by = db.Column(db.Integer, nullable=False)

@@ -10,11 +10,13 @@ import PageFrame from '../../../components/ui/frames/PageFrame';
 
 import Feedback from '../../../config/feedback';
 import PATHS from '../../../config/paths';
+import useCollection from '../../collection/context/useCollection';
 
 const { Toasts } = Feedback;
 
 export default function RefineView() {
   const navigate = useNavigate();
+  const { getFeeGuides } = useCollection();
 
   const toBase64 = (file) =>
     new Promise((resolve, reject) => {
@@ -35,11 +37,12 @@ export default function RefineView() {
         fee_guide_document: base64File,
       };
 
-      const uploadPromise = postData('/fee-guides', payload);
+      const uploadPromise = postData(PATHS.BACK.GUIDES, payload);
 
       toast.promise(
         uploadPromise.then(() => {
           formikHelpers.resetForm();
+          getFeeGuides();
           navigate(PATHS.FRONT.DASHBOARD, { replace: true });
         }),
         {

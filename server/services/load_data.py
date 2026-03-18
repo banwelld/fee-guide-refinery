@@ -20,8 +20,15 @@ def _get_or_create_schedule_item(
 
     if not schedule_item:
         # Code not in master list or any previous guide
+        # Derive category for province-specific codes
+        category_code = f"{proc.code[0]}0000" if proc.code else "00000"
+        
         schedule_item = ScheduleItem(
-            name=proc.name, code=proc.code, is_master=False, provinces=province
+            name=proc.name, 
+            code=proc.code, 
+            is_master=False, 
+            provinces=province,
+            parent_category=category_code
         )
         db.session.add(schedule_item)
         db.session.flush()
@@ -29,6 +36,10 @@ def _get_or_create_schedule_item(
     else:
         if not schedule_item.is_master:
             is_prov_spec = True
+            # Update category if missing for existing province-specific item
+            if not schedule_item.parent_category:
+                schedule_item.parent_category = f"{proc.code[0]}0000" if proc.code else "00000"
+                
             # If it's a province-specific code, track this province
             current_provinces = [
                 p.strip() for p in schedule_item.provinces.split(",") if p.strip()
@@ -65,6 +76,7 @@ def _get_or_create_fee_guide_item(
             has_E_flag=proc.has_E_flag,
             has_PS_flag=proc.has_PS_flag,
             is_province_specific=is_prov_spec,
+            parent_category=schedule_item.parent_category,
             fee_guide_id=fee_guide.id,
             schedule_item_id=schedule_item.id,
             updated_by=user_id,

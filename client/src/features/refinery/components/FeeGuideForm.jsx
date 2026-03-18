@@ -1,17 +1,16 @@
 import { Form, Formik } from 'formik';
 import * as yup from 'yup';
 
-import FormikInput from '../../../../../components/forms/FormikInput';
-import Button from '../../../../../components/ui/Button';
+import FormikInput from '../../../components/forms/FormikInput';
+import Button from '../../../components/ui/Button';
 import FormOptions from './FormOptions';
 
 import PROVINCES from '../config/provinces';
 import SPECIALTIES from '../config/specialties';
 
-import { InputTypes as Input } from '../../../../../config/constants';
-import { toBemClassName } from '../../../../../utils/helpers';
-import { DEFAULT_SELECT_VALUE as DEFAULT } from '../../../../../config/enums';
-import * as v from '../../../../../utils/validation';
+import { InputTypes as Input, DEFAULT_SELECT_VALUE as DEFAULT } from '../../../config/constants';
+import { toBemClassName } from '../../../utils/helpers';
+import * as v from '../../../utils/validation';
 
 export const Fields = Object.freeze({
   PROVINCE_CODE: 'provinceCode',

@@ -345,8 +345,8 @@ div.content {
   text-align: start;
 }
 
-.button--session-state {
-  width: 8ch;
+.button--session-state,
+.button--refine {
   margin-top: 0.5rem;
   background: linear-gradient(180deg, #39ff14 0%, #21aa44 100%);
   color: #061109;
@@ -363,15 +363,16 @@ div.content {
   transition: all 0.1s;
 }
 
-.button--session-state:hover {
+.button--session-state:hover,
+.button--refine:hover {
   filter: brightness(1.1);
   transform: translateY(1px);
   box-shadow:
     0 3px 0 #0f4a1e,
     0 4px 8px rgba(0, 0, 0, 0.3);
 }
-
-.button--session-state:active {
+.button--session-state:active,
+.button--refine:active {
   transform: translateY(4px);
   box-shadow: none;
 }
@@ -410,4 +411,6 @@ div.content {
 
 .toolbar h2 {
   color: var(--header-color);
+  text-align: center;
+  margin-bottom: 1rem;
 }

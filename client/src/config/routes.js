@@ -2,6 +2,7 @@ import App from '../app/App';
 import AppLayout from '../app/AppLayout';
 import PublicView from '../features/homepage/pages/PublicView';
 import GridView from '../features/collection/pages/grid-view/pages/GridView';
+import RefineView from '../features/refinery/pages/RefineView';
 import ErrorPage from '../pages/ErrorPage';
 
 import { AdminRoute, PublicRoute, ProtectedRoute } from '../components/Guards';
@@ -31,6 +32,14 @@ const routes = [
                 element: (
                   <ProtectedRoute>
                     <GridView />
+                  </ProtectedRoute>
+                ),
+              },
+              {
+                path: PATHS.FRONT.REFINERY,
+                element: (
+                  <ProtectedRoute>
+                    <RefineView />
                   </ProtectedRoute>
                 ),
               },

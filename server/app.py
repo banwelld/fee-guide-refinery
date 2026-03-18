@@ -89,7 +89,7 @@ class AllFeeGuides(Resource):
         data = request.json or {}
         province_code = data.get("province_code")
         specialty_code = data.get("specialty_code")
-        year_str = data.get("year_effective")
+        year_str = str(data.get("year_effective", ""))
 
         if falsey := find_falsey(
             {
@@ -102,7 +102,7 @@ class AllFeeGuides(Resource):
 
         pdf_b64 = data.get("fee_guide_document")
         if not pdf_b64:
-            return make_error(Msg.NO_FILE(file_name="fee_guide_document"), 400)
+            return make_error(Msg.NO_FILE, 400, file_name="fee_guide_document")
             
         if "base64," in pdf_b64:
             pdf_b64 = pdf_b64.split("base64,")[1]
@@ -115,20 +115,23 @@ class AllFeeGuides(Resource):
                 content_type="application/pdf"
             )
         except Exception:
-            return make_error(Msg.NO_FILE(file_name="fee_guide_document"), 400)
+            return make_error(Msg.NO_FILE, 400, file_name="fee_guide_document")
 
         try:
             prov_enum = ProvinceCode[province_code.upper()]
             spec_enum = Specialty[specialty_code.upper()]
         except KeyError:
-            return make_error(Msg.INVALID_CODE(code_type="province or specialty"), 422)
+            return make_error(Msg.INVALID_CODE, 422, code_type="province or specialty")
 
         try:
-            config = FEE_GUIDE_CONFIG[prov_enum][spec_enum][year_str]
+            config = FEE_GUIDE_CONFIG[prov_enum.value][spec_enum.value][year_str]
         except KeyError:
             return make_error(
-                Msg.NO_CONFIG(province=province_code, specialty=specialty_code, year=year_str),
+                Msg.NO_CONFIG,
                 422,
+                province=province_code,
+                specialty=specialty_code,
+                year=year_str,
             )
 
         try:
@@ -140,7 +143,7 @@ class AllFeeGuides(Resource):
                 year=year_str,
             )
         except Exception as e:
-            return make_error(Msg.PDF_EXTRACT_FAIL(error=str(e)), 422)
+            return make_error(Msg.PDF_EXTRACT_FAIL, 422, error=str(e))
 
         try:
             existing_guide = FeeGuide.query.filter_by(
@@ -169,7 +172,7 @@ class AllFeeGuides(Resource):
             )
         except Exception as e:
             db.session.rollback()
-            return make_error(Msg.DB_LOAD_FAIL(error=str(e)), 422)
+            return make_error(Msg.DB_LOAD_FAIL, 422, error=str(e))
 
         return make_response(fee_guide.to_dict(), 201)
 

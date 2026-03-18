@@ -7,6 +7,7 @@ const PATHS = Object.freeze({
     CREATE: '/fee-guide/create',
     USER_ACCESS: `/user/access`,
     CONTACT_US: '/#contact',
+    REFINERY: '/refine',
   },
   BACK: {
     GUIDES: '/api/fee-guides',
