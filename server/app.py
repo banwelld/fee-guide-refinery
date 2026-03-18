@@ -238,6 +238,30 @@ api.add_resource(ScheduleItemsByID, "/schedule-items/<int:id>")
 class FeeGuidesByID(GetByIDResource):
     model = FeeGuide
 
+    def delete(self, id):
+        if not g.user_id:
+            return make_error(Msg.NOT_AUTHENTICATED, 401)
+        if not g.user:
+            return make_error(Msg.UNAUTHORIZED, 403)
+            
+        fee_guide = db.session.get(FeeGuide, id)
+        if not fee_guide:
+            return make_response({"error": "not found"}, 404)
+        
+        is_admin = g.user.role == "data_admin"
+        is_manager = g.user.role == "manager"
+        
+        if not (is_admin or (is_manager and fee_guide.account_id == g.account_id)):
+            return make_error(Msg.UNAUTHORIZED, 403)
+
+        try:
+            db.session.delete(fee_guide)
+            db.session.commit()
+            return make_response({}, 204)
+        except Exception as e:
+            db.session.rollback()
+            return make_response({"error": str(e)}, 422)
+
 
 api.add_resource(FeeGuidesByID, "/fee-guides/<int:id>")
 

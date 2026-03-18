@@ -4,9 +4,9 @@ import {
   deleteData,
   runExclusive,
   logException,
-} from '../../../../../utils/helpers';
-import Feedback from '../../../../../config/feedback';
-import PATHS from '../../../../../config/paths';
+} from '../../../utils/helpers';
+import Feedback from '../../../config/feedback';
+import PATHS from '../../../config/paths';
 
 const { Errors } = Feedback;
 

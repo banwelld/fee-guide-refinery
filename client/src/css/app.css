@@ -345,12 +345,14 @@ div.content {
   text-align: start;
 }
 
+.button--danger,
 .button--session-state,
-.button--refine {
+.button--refine,
+.button--secondary {
   margin-top: 0.5rem;
-  background: linear-gradient(180deg, #39ff14 0%, #21aa44 100%);
-  color: #061109;
-  border: 2px solid #0f5c24;
+  background: linear-gradient(180deg, #ffd700 0%, #e6b800 100%);
+  color: #3b2c00;
+  border: 2px solid #b38600;
   font-family: var(--font-heading);
   text-transform: uppercase;
   font-size: 1rem;
@@ -358,11 +360,13 @@ div.content {
   padding: 0.1rem 0.2rem;
   border-radius: 4px;
   box-shadow:
-    0 4px 0 #0f4a1e,
+    0 4px 0 #805c00,
     0 5px 10px rgba(0, 0, 0, 0.3);
   transition: all 0.1s;
 }
 
+.button--danger:hover,
+.button--secondary-state:hover,
 .button--session-state:hover,
 .button--refine:hover {
   filter: brightness(1.1);
@@ -371,6 +375,8 @@ div.content {
     0 3px 0 #0f4a1e,
     0 4px 8px rgba(0, 0, 0, 0.3);
 }
+
+.button--danger:active,
 .button--session-state:active,
 .button--refine:active {
   transform: translateY(4px);

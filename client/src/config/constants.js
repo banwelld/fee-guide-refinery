@@ -92,3 +92,16 @@ export const InputTypes = Object.freeze({
   TEXT: 'text',
   TEXTAREA: 'textarea',
 });
+
+export const Specialties = {
+  GEN: 'general_practice',
+  PUB: 'public_health',
+  ENDO: 'endodontics',
+  ORTHO: 'orthodontics',
+  PED: 'pediatrics',
+  PERIO: 'periodontics',
+  PROS: 'prosthodontics',
+  OMFP: 'oral_maxillofacial_pathology',
+  OMFR: 'oral_maxillofacial_radiology',
+  OMFS: 'oral_maxillofacial_surgery',
+};

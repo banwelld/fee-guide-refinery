@@ -1,8 +1,9 @@
 .action-modal {
-  color: var(--color-surface1);
-  background: var(--color-frame);
-  border-radius: var(--border-radius-min);
-  max-width: 500px;
+  color: var(--text-main);
+  background: #e5e7eb;
+  border: 2px solid var(--header-color);
+  border-radius: 12px;
+  max-width: 360px;
   width: 100%;
   position: fixed;
   top: 50%;
@@ -34,12 +35,14 @@
 .action-modal__container--contents {
   width: 100%;
   height: 100%;
-  padding: var(--margin-section-min);
+  padding: 1.25rem;
 }
 
 .action-modal__container--ui-text,
 .action-modal__container--children {
-  margin-bottom: var(--margin-section-min);
+  margin-bottom: 1.25rem;
+  font-size: 1rem;
+  font-weight: 500;
 }
 
 .action-modal__container--button {

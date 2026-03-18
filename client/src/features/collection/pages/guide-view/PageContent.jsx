@@ -1,6 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import SectionFrame from '../../../../components/ui/frames/SectionFrame';
 import PATHS from '../../../../config/paths';
+import PROVINCES from '../../../refinery/config/provinces';
+import SPECIALTIES from '../../../refinery/config/specialties';
 
 export default function PageContent({ guide, isLoading }) {
   const navigate = useNavigate();
@@ -26,10 +28,17 @@ export default function PageContent({ guide, isLoading }) {
     );
   }
 
+  const provinceName =
+    PROVINCES.find((p) => p.code === guide.province_code)?.name
+    || guide.province_code;
+  const specialtyName =
+    SPECIALTIES.find((s) => s.code === guide.specialty_code)?.name
+    || guide.specialty_code;
+
   return (
     <SectionFrame
       className='guide-detail-view'
-      heading={`${guide.year_effective} ${guide.province_code} - ${guide.specialty_code}`}
+      heading={`${guide.year_effective} ${provinceName} - ${specialtyName}`}
       isBase={true}>
       <div className='table-container mt-4'>
         <table className='data-table'>

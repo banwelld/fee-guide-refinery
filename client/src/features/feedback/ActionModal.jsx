@@ -79,14 +79,14 @@ export default function ActionModal({
             <Button
               label={confirmLabel}
               onClick={onConfirm}
-              bemMod='modal-confirm'
+              className='button--danger'
             />
           )}
           {hasCloseButton && (
             <Button
               label={closeLabel}
               onClick={onClose}
-              bemMod='modal-cancel'
+              className='button--secondary'
             />
           )}
         </div>
