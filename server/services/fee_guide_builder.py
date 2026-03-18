@@ -7,7 +7,7 @@ from typing import Iterator, List, Union
 from werkzeug.datastructures import FileStorage
 
 from services.extract import generate_text_from_pdf
-from services.models import Category, Procedure
+from services.models import Procedure
 from services.transform import (
     normalize_fee_guide,
     remove_junk_lines,
@@ -25,7 +25,7 @@ CONFIG = FEE_GUIDE_CONFIG[PROV][SPEC][YEAR]
 
 def build_fee_guide(
     pdf_source: Union[FileStorage, str], config: dict, password: str = None
-) -> List[Union[Category, Procedure]]:
+) -> List[Procedure]:
     raw_text: Iterator = generate_text_from_pdf(pdf_source, password)
     clean_lines: List[str] = remove_junk_lines(raw_text, config["junk_strategy"])
     normalized_lines: list[str] = normalize_fee_guide(

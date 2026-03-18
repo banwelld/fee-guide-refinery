@@ -26,6 +26,7 @@ class FeeGuide(BaseModel):
 class ScheduleItem(FeeGuide):
     code: str
     name: str = "UNNAMED_ITEM"
+    parent_category: str = "UNASSIGNED"
     has_PS_flag: bool = False
     notes: List[str] = Field(default_factory=list)
     original_lines: List[str] = Field(default_factory=list)
@@ -44,6 +45,8 @@ class Procedure(ScheduleItem):
         print(f"CODE:{' ' * 10}{self.code}".center(40))
         print("-" * 40)
         print(f"NAME:{' ' * 10}{self.name}".center(40))
+        print("-" * 40)
+        print(f"CATEGORY:{' ' * 10}{self.parent_category}".center(40))
         print("-" * 40)
         print(f"FEE STRATEGY:{' ' * 10}{self.fee_strategy}".center(40))
         print("-" * 40)
@@ -73,20 +76,9 @@ class Procedure(ScheduleItem):
         return self
 
 
-class Category(ScheduleItem):
-    name: str = "UNNAMED_CATEGORY"
-    children: List[Union["Category", "Procedure"]] = Field(default_factory=list)
+# recursively defined types would go here
 
-    def info_dump(self):
-        print("\n\n" + "=" * 40)
-        print(f"CODE:{' ' * 10}{self.code}".center(40))
-        print("-" * 40)
-        print(f"NAME:{' ' * 10}{self.name}".center(40))
-        print("=" * 40)
+    pass
 
 
-# support self-referencing and recursive types
-if hasattr(Category, "update_forward_refs"):
-    Category.update_forward_refs()
-elif hasattr(Category, "model_rebuild"):
-    Category.model_rebuild()
+# support self-referencing and recursive types if needed in future

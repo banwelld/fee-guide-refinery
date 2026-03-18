@@ -1,0 +1,115 @@
+from typing import List
+from config import db
+from models import FeeGuide, ScheduleItem, FeeGuideItem
+from services.models import Procedure as ProcedureModel
+
+
+def _get_or_create_fee_guide(
+    province: str, specialty: str, year: int, account_id: int
+) -> FeeGuide:
+    """
+    Retrieves or creates a FeeGuide based on unique constraints.
+    """
+    fee_guide = FeeGuide.query.filter_by(
+        province_code=province,
+        specialty_code=specialty,
+        year_effective=year,
+        account_id=account_id,
+    ).first()
+
+    if not fee_guide:
+        fee_guide = FeeGuide(
+            province_code=province,
+            specialty_code=specialty,
+            year_effective=year,
+            account_id=account_id,
+        )
+        db.session.add(fee_guide)
+        db.session.flush()
+
+    return fee_guide
+
+
+def _get_or_create_schedule_item(
+    proc: ProcedureModel, province: str
+) -> (ScheduleItem, bool):
+    """
+    Retrieves or creates a ScheduleItem.
+    Updates province tracking for province-specific codes.
+    Returns the schedule item and whether it's province-specific.
+    """
+    schedule_item = ScheduleItem.query.filter_by(code=proc.code).first()
+    is_prov_spec = False
+
+    if not schedule_item:
+        # Code not in master list or any previous guide
+        schedule_item = ScheduleItem(
+            name=proc.name, code=proc.code, is_master=False, provinces=province
+        )
+        db.session.add(schedule_item)
+        db.session.flush()
+        is_prov_spec = True
+    else:
+        if not schedule_item.is_master:
+            is_prov_spec = True
+            # If it's a province-specific code, track this province
+            current_provinces = [
+                p.strip() for p in schedule_item.provinces.split(",") if p.strip()
+            ]
+            if province not in current_provinces:
+                current_provinces.append(province)
+                schedule_item.provinces = ", ".join(current_provinces)
+
+        proc.parent_category = schedule_item.parent_category or "UNASSIGNED"
+
+    return schedule_item, is_prov_spec
+
+
+def _get_or_create_fee_guide_item(
+    fee_guide: FeeGuide,
+    schedule_item: ScheduleItem,
+    proc: ProcedureModel,
+    is_prov_spec: bool,
+) -> FeeGuideItem:
+    """
+    Creates a FeeGuideItem if it doesn't already exist for the guide and item combo.
+    """
+    fgi = FeeGuideItem.query.filter_by(
+        fee_guide_id=fee_guide.id, schedule_item_id=schedule_item.id
+    ).first()
+
+    if not fgi:
+        fgi = FeeGuideItem(
+            fee_min_cents=proc.fee_min_cents,
+            fee_max_cents=proc.fee_max_cents,
+            fee_strategy=proc.fee_strategy,
+            has_L_flag=proc.has_L_flag,
+            has_E_flag=proc.has_E_flag,
+            has_PS_flag=proc.has_PS_flag,
+            is_province_specific=is_prov_spec,
+            fee_guide_id=fee_guide.id,
+            schedule_item_id=schedule_item.id,
+        )
+        db.session.add(fgi)
+
+    return fgi
+
+
+def load_procedures_into_db(
+    procedures: List[ProcedureModel],
+    province: str,
+    specialty: str,
+    year: int,
+    account_id: int,
+) -> FeeGuide:
+    """
+    Orchestrates the loading of parsed procedures into the database.
+    """
+    fee_guide = _get_or_create_fee_guide(province, specialty, year, account_id)
+
+    for proc in procedures:
+        schedule_item, is_prov_spec = _get_or_create_schedule_item(proc, province)
+        _get_or_create_fee_guide_item(fee_guide, schedule_item, proc, is_prov_spec)
+
+    db.session.commit()
+    return fee_guide

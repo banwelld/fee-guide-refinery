@@ -24,7 +24,6 @@ def _extract_section(
 
 def drop_junk(section_lines: Iterator[str], junk_config: Dict[str, Any]) -> List[str]:
     """
-    **Description:**
     Takes an iterator of section lines and keeps useable lines based on
     provided configuration.
     """

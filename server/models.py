@@ -47,6 +47,8 @@ class ScheduleItem(db.Model, SerializerMixin):
     name = db.Column(db.String, nullable=False)
     code = db.Column(db.String, nullable=False)
     parent_category = db.Column(db.String, nullable=True)
+    is_master = db.Column(db.Boolean, default=False)
+    provinces = db.Column(db.String, default="")
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
     fee_guide_items = db.relationship(
@@ -74,6 +76,7 @@ class FeeGuideItem(db.Model, SerializerMixin):
     has_L_flag = db.Column(db.Boolean, nullable=True, default=False)
     has_E_flag = db.Column(db.Boolean, nullable=True, default=False)
     has_PS_flag = db.Column(db.Boolean, nullable=True, default=False)
+    is_province_specific = db.Column(db.Boolean, default=False)
     fee_guide_id = db.Column(db.Integer, db.ForeignKey("fee_guides.id"), nullable=False)
     schedule_item_id = db.Column(
         db.Integer, db.ForeignKey("schedule_items.id"), nullable=False

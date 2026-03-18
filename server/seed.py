@@ -8,7 +8,7 @@ from models import Account, FeeGuideItem, ScheduleItem, User
 from sqlalchemy import text
 
 CDA_JSON_PATH = os.path.join(
-    os.path.dirname(__file__), "data", "test", "CDA_procedure_codes.json"
+    os.path.dirname(__file__), "data", "test", "CDA_master.json"
 )
 
 # ---------------------------------------------------------------------------
@@ -87,6 +87,7 @@ def seed_schedule_items():
             name=proc["name_long"],
             code=proc["code"],
             parent_category=proc.get("category"),
+            is_master=True,
         )
         db.session.add(item)
 

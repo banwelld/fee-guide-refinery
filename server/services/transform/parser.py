@@ -1,7 +1,7 @@
 import re
 from typing import Any, Dict, List, Union
 
-from services.models import Category, Procedure
+from services.models import Procedure
 from services.utils.constants import FEE, FEE_RANGE
 
 
@@ -44,33 +44,6 @@ def _bundle_lines(clean_lines: List[str]) -> List[List[str]]:
     return bundled_items
 
 
-def _parse_category(
-    bundle: List[str], code: str, expense_patterns: Dict, base_info: Dict
-) -> Category:
-    """
-    Handles category parsing: concatenates description and looks for the PS flag.
-    """
-    full_text = " ".join(bundle)
-    remaining_text = full_text.replace(code, "", 1)
-
-    ps_flag = expense_patterns.get("PS")
-    has_PS = False
-
-    if _check_string_match(remaining_text, ps_flag):
-        has_PS = True
-        remaining_text = remaining_text.replace(ps_flag, "")
-
-    final_name = _clean_and_collapse_whitespace(remaining_text)
-
-    return Category(
-        **base_info,
-        code=code,
-        name=final_name,
-        has_PS_flag=has_PS,
-        original_lines=bundle,
-    )
-
-
 def _parse_procedure(
     bundle: List[str],
     code: str,
@@ -80,8 +53,8 @@ def _parse_procedure(
     base_info: Dict,
 ) -> Procedure:
     """
-    The Stepmother: Delegates all the hard work to others and just
-    assembles the results.
+    Delegates orchestrates the parsing of each procedure, delegating to the
+    helpers ass needed.
     """
     full_text = " ".join(bundle)
     remaining_text = full_text.replace(code, "", 1)
@@ -166,9 +139,9 @@ def transform_lines_to_models(
     province: str,
     specialty: str,
     year: str,
-) -> List[Union[Category, Procedure]]:
+) -> List[Procedure]:
     """
-    Dad: The orchestrator. Orchestrates bundling and delegates
+    The orchestrator. Orchestrates bundling and delegates
     the parsing to Procedures or Categories.
     """
     base_info = {"province_code": province, "specialty": specialty, "year": year}
@@ -176,7 +149,6 @@ def transform_lines_to_models(
     expense_patterns = formatting.get("expenses", {})
     strategy_patterns = formatting.get("fee_strategy", {})
 
-    # Step 1: Delegate bundling
     bundles = _bundle_lines(clean_lines)
 
     final_records = []
@@ -186,10 +158,10 @@ def transform_lines_to_models(
         full_text = " ".join(bundle)
         remaining_text = full_text.replace(code, "", 1)
 
-        # Step 2: Delegate strategy detection
+        # determine fee strategy
         fee_data = _get_fee_strategy_data(remaining_text, strategy_patterns)
 
-        # Step 3: Delegate the actual parsing based on what we found
+        # parse all fee guide data
         if fee_data:
             record = _parse_procedure(
                 bundle,
@@ -199,9 +171,6 @@ def transform_lines_to_models(
                 expense_patterns,
                 base_info,
             )
-        else:
-            record = _parse_category(bundle, code, expense_patterns, base_info)
-
-        final_records.append(record)
+            final_records.append(record)
 
     return final_records
