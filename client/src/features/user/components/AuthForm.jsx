@@ -51,7 +51,7 @@ export default function AuthForm({ onSubmit }) {
           autoComplete='current-password'
           className='form__input form__input--input'
         />
-        <Button type='submit' label={'Login'} className='page-utility' />
+        <Button type='submit' label='Login' className='button--session-state' />
       </Form>
     </Formik>
   );

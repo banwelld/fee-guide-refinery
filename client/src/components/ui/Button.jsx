@@ -26,42 +26,15 @@ export default function Button({
   label,
   type = 'button',
   displayAsText = false,
-  bemMod,
-  bemMod2,
-  showMod2,
   className,
   children,
   ...props
 }) {
   const buttonProps = { type, ...props };
-
-  const isValidShowMod2 = ['function', 'boolean'].includes(typeof showMod2);
-
-  let resolvedBemMod2;
-  let resolvedShowMod2;
-
-  if (displayAsText) {
-    resolvedBemMod2 = 'text';
-    resolvedShowMod2 = true;
-  } else if (isValidString(bemMod2) && isValidShowMod2) {
-    resolvedBemMod2 = bemMod2;
-    resolvedShowMod2 = showMod2;
-  }
-
-  const bemProps = {
-    bemBlock: 'button',
-    bemMod,
-    bemMod2: resolvedBemMod2,
-    showMod2: resolvedShowMod2,
-  };
-
-  const finalClassName = toBemClassName(bemProps);
-
   return (
     <button
       {...buttonProps}
-      className={className ? `${finalClassName} ${className}` : finalClassName}
-    >
+      className={displayAsText ? `${className} button--text` : className}>
       {label}
     </button>
   );

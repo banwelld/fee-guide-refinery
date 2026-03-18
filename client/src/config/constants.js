@@ -22,8 +22,10 @@ export const Headings = {
   AUTH_OUTPUT: 'Configurable output formats (JSON, CSV, text)',
   AUTH_COMPLIANT: '100% dental association compliance',
   AUTH_SECURE: 'Role-based controls',
+  AUTH_VALUE: 'Unmatched value & peace of mind',
   DASHBOARD_HEAD: 'Fee Guide Collection',
   DASHBOARD_SUBHEAD: 'Manage and refine your provincial dental fee guides.',
+  CONTACT_US: 'Contact Us',
 };
 
 export const LinkLabel = {
@@ -50,6 +52,10 @@ export const UiText = {
   AUTH_SECURE: [
     `Access is organized by role: Managers control account configuration and user access, Business Users submit and retrieve fee guide data, and Data Admins manage extraction and export operations.`,
     `Each user sees only the tools and data relevant to their function.`,
+  ],
+  AUTH_VALUE: [
+    `Save thousands per year in administrative costs by automating the most tedious part of dental fee management.`,
+    `But the real value is priceless: your employees are freed from mind-numbing manual entry, and with 100% automated precision, there's no room for human error.`,
   ],
   GENERAL_ERROR: [
     <strong>ERROR 404:</strong>,
