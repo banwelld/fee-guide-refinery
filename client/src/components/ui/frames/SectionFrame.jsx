@@ -1,25 +1,26 @@
-import { toBemClassName } from '../../../utils/helpers';
+import './ContentSection.css';
 
 export default function SectionFrame({
   heading = 'HEADING_MISSING_OR_INVALID',
-  hasPageHeading = false,
   uiText = null,
+  isBase = false,
   children,
-  bemRoot,
+  id,
 }) {
-  const headingLevel = hasPageHeading ? 1 : 2;
+  const headingLevel = isBase ? 1 : 2;
   const Heading = `h${headingLevel}`;
+  const className = isBase ? 'content__section base' : 'content__section';
 
   const arrayToMappedText = (text, index) => <p key={index}>{text}</p>;
 
   return (
-    <section className={toBemClassName({ bemElem: 'section', ...bemRoot })}>
-      <div className={toBemClassName({ bemElem: 'intro', ...bemRoot })}>
-        <header className={toBemClassName({ bemElem: 'header', ...bemRoot })}>
+    <section id={id} className={className}>
+      <div className='content__container--header'>
+        <header>
           <Heading>{heading}</Heading>
         </header>
         {!!uiText && (
-          <div className={toBemClassName({ bemElem: 'ui-text', ...bemRoot })}>
+          <div className='content__container--ui-text'>
             {Array.isArray(uiText) ? uiText.map(arrayToMappedText) : uiText}
           </div>
         )}

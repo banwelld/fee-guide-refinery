@@ -21,7 +21,7 @@ export default function PublicView() {
   const onSubmit = (data) =>
     toast.promise(
       login(data).then((user) => {
-        navigate(PATHS.FRONT.DASHBOARD, { replace: true });
+        navigate(PATHS.FRONT.DASHBOARD);
         return user;
       }),
       {

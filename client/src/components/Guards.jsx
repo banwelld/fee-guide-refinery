@@ -33,7 +33,7 @@ export function PublicRoute({ children }) {
   if (!sessionLoaded) return null;
 
   if (isLoggedIn) {
-    return <Navigate to={PATHS.FRONT.HOME} replace />;
+    return <Navigate to={PATHS.FRONT.DASHBOARD} replace />;
   }
   return children;
 }
@@ -58,5 +58,5 @@ export function ProtectedRoute({ isCustomersOnly, children }) {
     return <Navigate to={PATHS.FRONT.HOME} replace />;
   }
 
-  return <Navigate to={PATHS.FRONT.AUTH} replace />;
+  return <Navigate to={PATHS.FRONT.HOME} replace />;
 }

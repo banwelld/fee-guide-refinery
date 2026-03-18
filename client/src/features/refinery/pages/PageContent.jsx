@@ -1,35 +1,30 @@
-import ContentSection from '../../../components/ui/frames/ContentSection';
+import SectionFrame from '../../../components/ui/frames/SectionFrame';
 import { Headings, UiText } from '../../../config/constants';
 
 export default function PageContent() {
   const sectionProps = {
-    isRoot: true,
-    hasPageHeading: false,
     heading: Headings.AUTH_MAIN,
     uiText: UiText.AUTH_MAIN,
   };
 
   return (
-    <ContentSection {...sectionProps}>
-      <ContentSection heading={Headings.AUTH_LOAD} uiText={UiText.AUTH_LOAD} />
-      <ContentSection
-        heading={Headings.AUTH_VALUE}
-        uiText={UiText.AUTH_VALUE}
-      />
-      <ContentSection
+    <SectionFrame {...sectionProps}>
+      <SectionFrame heading={Headings.AUTH_LOAD} uiText={UiText.AUTH_LOAD} />
+      <SectionFrame heading={Headings.AUTH_VALUE} uiText={UiText.AUTH_VALUE} />
+      <SectionFrame
         heading={Headings.AUTH_OUTPUT}
         uiText={UiText.AUTH_OUTPUT}
       />
-      <ContentSection
+      <SectionFrame
         heading={Headings.AUTH_COMPLIANT}
         uiText={UiText.AUTH_COMPLIANT}
       />
-      <ContentSection
+      <SectionFrame
         heading={Headings.AUTH_SECURE}
         uiText={UiText.AUTH_SECURE}
       />
       <div className='footer-content'>
-        <ContentSection heading={Headings.CONTACT_US}>
+        <SectionFrame heading={Headings.CONTACT_US}>
           <address className='footer-content__address'>
             <h3>ADDRESS</h3>
             <p>
@@ -47,8 +42,8 @@ export default function PageContent() {
               <strong>Toll-free:</strong> &emsp; 1-800-REFINERY-DATA-VOID
             </p>
           </div>
-        </ContentSection>
+        </SectionFrame>
       </div>
-    </ContentSection>
+    </SectionFrame>
   );
 }

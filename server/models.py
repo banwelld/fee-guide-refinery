@@ -83,6 +83,7 @@ class FeeGuideItem(db.Model, SerializerMixin):
     )
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
+    updated_by = db.Column(db.Integer, nullable=False)
     fee_guide = db.relationship("FeeGuide", back_populates="fee_guide_items")
     schedule_item = db.relationship("ScheduleItem", back_populates="fee_guide_items")
 

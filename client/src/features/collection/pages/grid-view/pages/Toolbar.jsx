@@ -6,7 +6,7 @@ export default function Toolbar({ config, pageName, heading, subHeading }) {
   const { filter, sort } = config;
   return (
     <ToolbarSection
-      isRoot
+      isBase
       hasPageHeading
       heading={heading || Headings.FG_REFINERY}
       subHeading={subHeading}>

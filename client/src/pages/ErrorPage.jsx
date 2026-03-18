@@ -1,6 +1,6 @@
 import { useRouteError } from 'react-router-dom';
 import Header from '../features/header/Header';
-import ContentSection from '../components/ui/frames/ContentSection';
+import SectionFrame from '../components/ui/frames/SectionFrame';
 import { Headings, UiText } from '../config/constants';
 
 export default function ErrorPage({
@@ -14,12 +14,7 @@ export default function ErrorPage({
   const displayText = error?.message || uiText;
 
   const content = (
-    <ContentSection
-      isRoot
-      hasPageHeading
-      heading={displayHeading}
-      uiText={displayText}
-    />
+    <SectionFrame heading={displayHeading} uiText={displayText} />
   );
 
   if (isRouteError)

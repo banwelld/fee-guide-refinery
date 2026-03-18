@@ -35,11 +35,11 @@ export const LinkLabel = {
 export const UiText = {
   AUTH_MAIN: [
     `Fee Guide Refinery eliminates the manual effort of provincial dental fee guide management. Upload a PDF and walk away — your structured data is ready in seconds.`,
-    `Built for benefits administrators, insurers, and dental software teams who need accurate, association-aligned fee data without the spreadsheet chaos.`,
   ],
   AUTH_LOAD: [
     `Our extraction engine reads provincial fee guide PDFs directly — no copy-paste, no reformatting, no manual entry.`,
     `Procedure codes, fee amounts, indicators, and categories are identified and structured automatically, even as fee guide formats change year over year.`,
+    `Built for benefits administrators, insurers, and dental software teams who need accurate, association-aligned fee data without the spreadsheet chaos.`,
   ],
   AUTH_OUTPUT: [
     `Extracted data is delivered in the format your workflow demands: JSON for API integration, CSV for spreadsheet import, or plain text for legacy systems.`,

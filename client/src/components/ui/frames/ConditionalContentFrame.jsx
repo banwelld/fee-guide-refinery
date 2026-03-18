@@ -1,9 +1,9 @@
-import ContentSection from './ContentSection';
+import SectionFrame from './SectionFrame';
 
 /**
  * @typedef SectionProps
  * @property {string} [heading] - the section's heading
- * @property {boolean} [isRoot] - the section is/is not the root section for its content/toolbar
+ * @property {boolean} [isBase] - the section is/is not the root section for its content/toolbar
  * @property {boolean} [hasPageHeading] - the section's heading shall be/not be H1
  * @property {string | string[]} [uiText] - messaging in content sections, subtitle in toolbar sections
  * @property {string} [bemBlock] - Block portion of BEM classname
@@ -21,8 +21,8 @@ export default function ConditionalContentFrame({
   ...sectionProps
 }) {
   return (
-    <ContentSection {...sectionProps}>
+    <SectionFrame {...sectionProps}>
       {isPrimary ? primaryView : secondaryView}
-    </ContentSection>
+    </SectionFrame>
   );
 }

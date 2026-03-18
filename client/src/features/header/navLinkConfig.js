@@ -4,7 +4,7 @@ import PATHS from '../../config/paths';
 export const NAV_LINK_CONFIG = [
   {
     path: PATHS.FRONT.DASHBOARD,
-    label: 'Fee Guide List',
+    label: 'Dashboard',
     visibleTo: [Role.MANAGER, Role.USER, Role.ADMIN],
   },
   {

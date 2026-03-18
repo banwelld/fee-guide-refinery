@@ -10,7 +10,7 @@ export default function NavLayout({ linkConfig }) {
     <>
       <ul className='list--nav-links'>
         {linkConfig.map((link) => (
-          <li key={link.path}>
+          <li key={link.label}>
             <NavLink to={link.path}>{link.label}</NavLink>
           </li>
         ))}

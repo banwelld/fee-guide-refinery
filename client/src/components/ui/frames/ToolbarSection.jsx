@@ -6,7 +6,7 @@ import './ToolbarSection.css';
  * @property {string} [heading]
  * @property {number} [headingLevel]
  * @property {string} [subHeading]
- * @property {boolean} [isRoot]
+ * @property {boolean} [isBase]
  * @property {string} [bemBlock]
  * @property {string} [bemMod]
  * @property {React.ReactNode} children
@@ -14,7 +14,7 @@ import './ToolbarSection.css';
 
 /** @param {ToolbarProps} props */
 
-export default function ToolbarSection({ children, isRoot, ...rest }) {
+export default function ToolbarSection({ children, isBase, ...rest }) {
   const { heading = 'Options', hasPageHeading, subHeading: uiText } = rest;
 
   const sectionProps = { heading, hasPageHeading, uiText };

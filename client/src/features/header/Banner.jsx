@@ -7,7 +7,7 @@ export default function Banner() {
   return (
     <div className='component--banner component__container--banner'>
       <Link
-        to={PATHS.FRONT.LOGIN}
+        to={PATHS.FRONT.HOME}
         className='banner__link'
         aria-label={`${Headings.FG_REFINERY} homepage`}>
         <div className='component__container--banner-image'>
