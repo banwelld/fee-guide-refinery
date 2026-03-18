@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import { toBemClassName } from '../../../utils/helpers';
 import { DataTypes } from '../../../config/constants';
 
 const normalizeItems = (item) =>
@@ -10,7 +9,6 @@ const normalizeItems = (item) =>
  * @property {(string|{value: string, label: string})[]} items - an array of selectable items
  * @property {string} selected - the value of the selected item
  * @property {function} setState - setter function to set the selected item to state
- * @property {string} bemBlock - the block portion of the BEM classname
  */
 
 /**
@@ -25,17 +23,9 @@ export default function OptionSelect({
   const normalizedItems = useMemo(() => items.map(normalizeItems), [items]);
 
   return (
-    <ul className={toBemClassName({ bemBlock, bemElem: 'list' })}>
+    <ul>
       {normalizedItems.map(({ value, label }) => (
-        <li
-          key={value}
-          className={toBemClassName({
-            bemBlock,
-            bemElem: 'list-item',
-            bemMod2: 'selected',
-            showMod2: value === selected,
-          })}
-          onClick={() => setState(value)}>
+        <li key={value} onClick={() => setState(value)}>
           {label}
         </li>
       ))}

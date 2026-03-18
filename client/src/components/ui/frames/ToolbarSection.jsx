@@ -1,19 +1,6 @@
 import SectionFrame from './SectionFrame';
 import './ToolbarSection.css';
 
-/**
- * @typedef ToolbarProps
- * @property {string} [heading]
- * @property {number} [headingLevel]
- * @property {string} [subHeading]
- * @property {boolean} [isBase]
- * @property {string} [bemBlock]
- * @property {string} [bemMod]
- * @property {React.ReactNode} children
- */
-
-/** @param {ToolbarProps} props */
-
 export default function ToolbarSection({ children, isBase, ...rest }) {
   const { heading = 'Options', hasPageHeading, subHeading: uiText } = rest;
 

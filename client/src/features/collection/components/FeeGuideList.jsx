@@ -12,7 +12,7 @@ export default function FeeGuideList() {
 
   if (!feeGuides || feeGuides.length === 0) {
     return (
-      <div className='empty-state'>
+      <div className='fg-list__container fg-list__container--empty-state'>
         <p>{Headings.NO_FEE_GUIDES}</p>
         {/* We can add an 'Add Guide' button here later */}
       </div>
@@ -20,7 +20,7 @@ export default function FeeGuideList() {
   }
 
   return (
-    <div className='fg-list'>
+    <div className='fg-list__container'>
       {feeGuides.map((guide) => (
         <FeeGuideCard key={guide.id} feeGuide={guide} />
       ))}

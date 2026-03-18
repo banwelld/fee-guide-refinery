@@ -1,8 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
-import useUser from '../../user/context/useUser';
-
 import PageContent from './PageContent';
 import Toolbar from './Toolbar';
 import AuthForm from '../../user/components/AuthForm';

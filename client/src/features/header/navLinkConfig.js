@@ -8,11 +8,6 @@ export const NAV_LINK_CONFIG = [
     visibleTo: [Role.MANAGER, Role.USER, Role.ADMIN],
   },
   {
-    path: PATHS.FRONT.NEW_GUIDE,
-    label: 'New Guide',
-    visibleTo: [Role.MANAGER, Role.USER],
-  },
-  {
     path: PATHS.FRONT.MAINTENANCE,
     label: 'Guide Maintenance',
     visibleTo: [Role.MANAGER],
@@ -24,7 +19,7 @@ export const NAV_LINK_CONFIG = [
   },
   {
     path: PATHS.FRONT.EXPORT,
-    label: 'Add/Update Products',
+    label: 'Export Data',
     visibleTo: [Role.MANAGER, Role.ADMIN],
   },
   {

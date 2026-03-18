@@ -77,14 +77,14 @@ p + p {
   width: 100%;
 }
 
-.page {
+main {
   display: flex;
   flex: 1;
   width: 100%;
   min-height: calc(100vh - var(--header-height));
 }
 
-.toolbar {
+aside.toolbar {
   width: 240px;
   flex-shrink: 0;
   background: var(--toolbar-color);
@@ -95,18 +95,19 @@ p + p {
   align-items: center;
 }
 
-.content {
+div.content {
   flex: 1;
   min-height: 100%;
   overflow-y: auto;
   background: var(--base-bg);
 }
 
-.fg-list {
+.fg-list__container {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
   padding: 1rem;
+  margin-top: 1.5rem;
 }
 
 .fg-card {
@@ -218,7 +219,7 @@ p + p {
 }
 
 .loading-state,
-.empty-state {
+.fg-list__container--empty-state {
   text-align: center;
   padding: 4rem;
   color: var(--text-muted);
@@ -272,6 +273,12 @@ p + p {
     white-space: nowrap;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   }
+}
+
+.header__nav {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
 }
 
 .list--nav-links {

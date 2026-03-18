@@ -25,6 +25,7 @@ export const Headings = {
   AUTH_VALUE: 'Unmatched value & peace of mind',
   DASHBOARD_HEAD: 'Fee Guide Collection',
   DASHBOARD_SUBHEAD: 'Manage and refine your provincial dental fee guides.',
+  REFINERY: 'Fee Guide Data Extraction',
   CONTACT_US: 'Contact Us',
 };
 
@@ -73,6 +74,12 @@ export const UiText = {
     `You must be logged in to view this page. Please login or register to continue.`,
   ],
   NO_FEE_GUIDES: ['Your collection is empty. Start by adding a new fee guide.'],
+  REFINERY: [
+    `Enter all data into the form below, being sure to attach the fee guide
+      that corresponds to the province, specialty, and year that you're selecting.`,
+    `When you've done all that, just hit "REFINE" and you'll have your fee guide
+      data in seconds.`,
+  ],
 };
 
 export const InputTypes = Object.freeze({

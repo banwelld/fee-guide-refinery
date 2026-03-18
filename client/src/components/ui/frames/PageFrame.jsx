@@ -1,5 +1,3 @@
-import { toBemClassName } from '../../../utils/helpers';
-
 /**
  * **PageFrame component**
  *
@@ -10,19 +8,12 @@ import { toBemClassName } from '../../../utils/helpers';
  * @param {Object} props
  * @param {ReactNode} props.toolbar - The toolbar content
  * @param {ReactNode} props.PageContent - The main content
- * @param {string} props.pageName - The page name
  */
-export default function PageFrame({ toolbar, pageContent, pageName }) {
+export default function PageFrame({ toolbar, pageContent }) {
   return (
-    <main className={toBemClassName({ bemBlock: 'page', bemMod: pageName })}>
-      <aside
-        className={toBemClassName({ bemBlock: 'toolbar', bemMod: pageName })}>
-        {toolbar}
-      </aside>
-      <div
-        className={toBemClassName({ bemBlock: 'content', bemMod: pageName })}>
-        {pageContent}
-      </div>
+    <main>
+      <aside className='toolbar'>{toolbar}</aside>
+      <div className='content'>{pageContent}</div>
     </main>
   );
 }

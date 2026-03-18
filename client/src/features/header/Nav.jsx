@@ -12,7 +12,7 @@ export default function Nav() {
   );
 
   return (
-    <nav>
+    <nav className='header__nav'>
       <NavLayout linkConfig={linkConfig} />
     </nav>
   );
