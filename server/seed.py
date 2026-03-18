@@ -96,14 +96,11 @@ def seed_schedule_items():
 
 def run():
     with app.app_context():
-        print("Dropping schema (CASCADE)...")
-        with db.engine.connect() as conn:
-            conn.execute(text("DROP SCHEMA public CASCADE"))
-            conn.execute(text("CREATE SCHEMA public"))
-            conn.commit()
-
-        print("Recreating all tables...")
-        db.create_all()
+        print("Clearing existing data...")
+        meta = db.metadata
+        for table in reversed(meta.sorted_tables):
+            db.session.execute(table.delete())
+        db.session.commit()
 
         print("Seeding Accounts...")
         accounts = seed_accounts()

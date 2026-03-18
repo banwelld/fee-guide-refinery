@@ -13,6 +13,12 @@ class Message(str, Enum):
     NO_DATA = "No data provided."
     INVALID_CREDS = "Invalid email or password."
     LOGGED_OUT = "Logout successful."
+    NO_FILE = "No {file_name} file provided."
+    INVALID_CODE = "Invalid {code_type} code."
+    NO_CONFIG = "No configuration found for {province} {specialty} {year}."
+    GUIDE_EXISTS = "Fee guide already exists."
+    PDF_EXTRACT_FAIL = "Failed to extract text from PDF: {error}"
+    DB_LOAD_FAIL = "Failed to load procedures into DB: {error}"
 
     def __call__(self, **kwargs):
         return self.value.format(**kwargs) if kwargs else self.value

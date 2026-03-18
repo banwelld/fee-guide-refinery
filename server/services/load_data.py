@@ -4,30 +4,7 @@ from models import FeeGuide, ScheduleItem, FeeGuideItem
 from services.models import Procedure as ProcedureModel
 
 
-def _get_or_create_fee_guide(
-    province: str, specialty: str, year: int, account_id: int
-) -> FeeGuide:
-    """
-    Retrieves or creates a FeeGuide based on unique constraints.
-    """
-    fee_guide = FeeGuide.query.filter_by(
-        province_code=province,
-        specialty_code=specialty,
-        year_effective=year,
-        account_id=account_id,
-    ).first()
 
-    if not fee_guide:
-        fee_guide = FeeGuide(
-            province_code=province,
-            specialty_code=specialty,
-            year_effective=year,
-            account_id=account_id,
-        )
-        db.session.add(fee_guide)
-        db.session.flush()
-
-    return fee_guide
 
 
 def _get_or_create_schedule_item(
@@ -98,20 +75,16 @@ def _get_or_create_fee_guide_item(
 
 
 def load_procedures_into_db(
+    fee_guide: FeeGuide,
     procedures: List[ProcedureModel],
-    province: str,
-    specialty: str,
-    year: int,
-    account_id: int,
     user_id: int,
 ) -> FeeGuide:
     """
     Orchestrates the loading of parsed procedures into the database.
     """
-    fee_guide = _get_or_create_fee_guide(province, specialty, year, account_id)
 
     for proc in procedures:
-        schedule_item, is_prov_spec = _get_or_create_schedule_item(proc, province)
+        schedule_item, is_prov_spec = _get_or_create_schedule_item(proc, fee_guide.province_code)
         _get_or_create_fee_guide_item(
             fee_guide, schedule_item, proc, is_prov_spec, user_id
         )
