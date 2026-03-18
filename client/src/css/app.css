@@ -194,7 +194,7 @@ div.content {
   align-items: center;
 }
 
-.btn {
+.button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -207,13 +207,13 @@ div.content {
   text-decoration: none;
 }
 
-.btn--primary {
+.button--primary {
   background: var(--primary-color);
   color: white;
   border: none;
 }
 
-.btn--primary:hover {
+.button--primary:hover {
   background: #1d4ed8;
   box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
 }

@@ -2,6 +2,7 @@ import App from '../app/App';
 import AppLayout from '../app/AppLayout';
 import PublicView from '../features/homepage/pages/PublicView';
 import GridView from '../features/collection/pages/grid-view/pages/GridView';
+import GuideView from '../features/collection/pages/guide-view/GuideView';
 import RefineView from '../features/refinery/pages/RefineView';
 import ErrorPage from '../pages/ErrorPage';
 
@@ -40,6 +41,14 @@ const routes = [
                 element: (
                   <ProtectedRoute>
                     <RefineView />
+                  </ProtectedRoute>
+                ),
+              },
+              {
+                path: `${PATHS.FRONT.MAINTENANCE}/:id`,
+                element: (
+                  <ProtectedRoute>
+                    <GuideView />
                   </ProtectedRoute>
                 ),
               },

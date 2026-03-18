@@ -35,7 +35,7 @@ export default function FeeGuideCard({ feeGuide }) {
       <div className='fg-card__actions'>
         <Link
           to={`${PATHS.FRONT.MAINTENANCE}/${id}`}
-          className='btn btn--primary'>
+          className='button button--primary'>
           {LL.REFINE}
         </Link>
       </div>
