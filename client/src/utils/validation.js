@@ -72,6 +72,32 @@ export const validateSelectOption = yup
   .notOneOf([DEFAULT_SELECT_VALUE], REQUIRED)
   .required(REQUIRED);
 
+export const validateYear = yup
+  .number('must be a number')
+  .integer('must be a whole number')
+  .min(1900, 'Must be a valid year')
+  .max(new Date().getFullYear() + 2, 'Cannot exceed next year')
+  .required(REQUIRED);
+
+export const validateFile = yup
+  .mixed()
+  .required('A PDF file is required.')
+  .test('is-file-too-big', 'File exceeds 10MB limit', (file) => {
+    let valid = true;
+    if (file) {
+      const size = file.size / 1024 / 1024; // MB
+      if (size > 10) valid = false;
+    }
+    return valid;
+  })
+  .test('is-file-pdf', 'File must be in valid PDF format', (file) => {
+    let valid = true;
+    if (file && file.type) {
+      valid = file.type === 'application/pdf';
+    }
+    return valid;
+  });
+
 export const validatePostalCd = yup
   .string('must be a string')
   .required(REQUIRED)

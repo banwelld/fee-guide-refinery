@@ -1,9 +1,11 @@
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
+import { postData } from '../../../utils/helpers';
+
 import PageContent from './PageContent';
 import Toolbar from './Toolbar';
-import AuthForm from '../../user/components/AuthForm';
+import FeeGuideForm from '../components/FeeGuideForm';
 import PageFrame from '../../../components/ui/frames/PageFrame';
 
 import Feedback from '../../../config/feedback';
@@ -13,38 +15,57 @@ const { Toasts } = Feedback;
 
 export default function RefineView() {
   const navigate = useNavigate();
-  const { isLoggedIn, userAuth } = useUser();
-  const { login } = userAuth;
 
-  const onSubmit = (data) =>
-    toast.promise(
-      login(data).then((user) => {
-        navigate(PATHS.FRONT.DASHBOARD, { replace: true });
-        return user;
-      }),
-      {
-        loading: Toasts.USER.LOGIN.BUSY,
-        success: (user) => Toasts.USER.LOGIN.SUCCESS,
-        error: (err) => {
-          if (err.status === 401) return Toasts.USER.LOGIN.BAD_CREDS;
-          if (err.status === 422 && err.serverError) return err.serverError;
+  const toBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
 
-          return Toasts.USER.LOGIN.FAILURE;
+  const onSubmit = async (data, formikHelpers) => {
+    try {
+      const base64File = await toBase64(data.fee_guide_document);
+
+      const payload = {
+        province_code: data.provinceCode,
+        specialty_code: data.specialtyCode,
+        year_effective: data.yearEffective,
+        fee_guide_document: base64File,
+      };
+
+      const uploadPromise = postData('/fee-guides', payload);
+
+      toast.promise(
+        uploadPromise.then(() => {
+          formikHelpers.resetForm();
+          navigate(PATHS.FRONT.DASHBOARD, { replace: true });
+        }),
+        {
+          loading: Toasts.REFINERY.UPLOAD.BUSY,
+          success: () => Toasts.REFINERY.UPLOAD.SUCCESS,
+          error: (err) => {
+            if (err.status === 409) return Toasts.REFINERY.UPLOAD.CONFLICT;
+            if (err.serverError) return err.serverError;
+            return Toasts.REFINERY.UPLOAD.FAILURE;
+          },
         },
-      },
-    );
-
-  const Login = <AuthForm onSubmit={onSubmit} />;
-
-  const contentProps = {
-    onSubmit,
-    isLoggedIn,
+      );
+    } catch (err) {
+      toast.error('Failed to parse file for upload.');
+    }
   };
 
   return (
     <PageFrame
-      toolbar={<Toolbar toolbarControls={Login} />}
-      pageContent={<PageContent {...contentProps} />}
+      toolbar={<Toolbar />}
+      pageContent={
+        <PageContent>
+          <FeeGuideForm onSubmit={onSubmit} />
+        </PageContent>
+      }
     />
   );
 }
+

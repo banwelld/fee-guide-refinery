@@ -3,7 +3,10 @@ import * as yup from 'yup';
 
 import FormikInput from '../../../../../components/forms/FormikInput';
 import Button from '../../../../../components/ui/Button';
-import ProvinceOptions from '../../../../../components/forms/options/ProvinceOptions';
+import FormOptions from './FormOptions';
+
+import PROVINCES from '../config/provinces';
+import SPECIALTIES from '../config/specialties';
 
 import { InputTypes as Input } from '../../../../../config/constants';
 import { toBemClassName } from '../../../../../utils/helpers';
@@ -11,105 +14,94 @@ import { DEFAULT_SELECT_VALUE as DEFAULT } from '../../../../../config/enums';
 import * as v from '../../../../../utils/validation';
 
 export const Fields = Object.freeze({
-  ADDRESS_LINE_1: 'addressLine1',
-  ADDRESS_LINE_2: 'addressLine2',
-  CITY: 'city',
   PROVINCE_CODE: 'provinceCode',
-  POSTAL_CODE: 'postalCode',
+  SPECIALTY_CODE: 'specialtyCode',
+  YEAR_EFFECTIVE: 'yearEffective',
+  DOCUMENT: 'fee_guide_document',
 });
 
 const initialValues = {
-  [Fields.ADDRESS_LINE_1]: '',
-  [Fields.ADDRESS_LINE_2]: '',
-  [Fields.CITY]: '',
   [Fields.PROVINCE_CODE]: DEFAULT,
-  [Fields.POSTAL_CODE]: '',
+  [Fields.SPECIALTY_CODE]: DEFAULT,
+  [Fields.YEAR_EFFECTIVE]: new Date().getFullYear(),
+  [Fields.DOCUMENT]: null,
 };
 
 const validationSchema = yup.object({
-  [Fields.ADDRESS_LINE_1]: v.validateAddressLine1,
-  [Fields.ADDRESS_LINE_2]: v.validateAddressLine2,
-  [Fields.CITY]: v.validateCity,
   [Fields.PROVINCE_CODE]: v.validateSelectOption,
-  [Fields.POSTAL_CODE]: v.validatePostalCd,
+  [Fields.SPECIALTY_CODE]: v.validateSelectOption,
+  [Fields.YEAR_EFFECTIVE]: v.validateYear,
+  [Fields.DOCUMENT]: v.validateFile,
 });
 
-const bemMod = 'delivery-address';
+const bemMod = 'refinery-form';
 
-export default function FeeGuideForm({ onSubmit, address = null }) {
+export default function FeeGuideForm({ onSubmit }) {
   const formikProps = {
-    initialValues: !!address ? address : initialValues,
+    initialValues,
     validationSchema,
     onSubmit,
   };
 
+  const fieldClass = toBemClassName({
+    bemBlock: 'form',
+    bemElem: 'field',
+    bemMod,
+  });
+
   return (
     <Formik {...formikProps}>
-      <Form className={toBemClassName({ bemBlock, bemMod })}>
-        <FormikInput
-          name={Fields.ADDRESS_LINE_1}
-          as={Input.INPUT}
-          type={Input.TEXT}
-          placeholder='street address'
-          autoComplete='address-line1'
-          autoFocus={true}
-          className={toBemClassName({
-            bemBlock,
-            bemElem: 'field',
-            bemMod,
-          })}
-        />
-        <FormikInput
-          name={Fields.ADDRESS_LINE_2}
-          as={Input.INPUT}
-          type={Input.TEXT}
-          placeholder='unit, building, etc. (optional)'
-          autoComplete='address-line1'
-          className={toBemClassName({
-            bemBlock,
-            bemElem: 'field',
-            bemMod,
-          })}
-        />
-        <FormikInput
-          name={Fields.CITY}
-          as={Input.INPUT}
-          type={Input.TEXT}
-          placeholder='city'
-          autoComplete='address-level2'
-          className={toBemClassName({
-            bemBlock,
-            bemElem: 'field',
-            bemMod,
-          })}
-        />
-        <FormikInput
-          name={Fields.PROVINCE_CODE}
-          as={Input.SELECT}
-          type={null}
-          placeholder={null}
-          autoComplete='address-level1'
-          className={toBemClassName({
-            bemBlock,
-            bemElem: 'field',
-            bemMod,
-          })}>
-          <ProvinceOptions />
-        </FormikInput>
-        <FormikInput
-          name={Fields.POSTAL_CODE}
-          as={Input.INPUT}
-          type={Input.TEXT}
-          placeholder='postal code'
-          autoComplete='postal-code'
-          className={toBemClassName({
-            bemBlock,
-            bemElem: 'field',
-            bemMod,
-          })}
-        />
-        <Button type='submit' label='Save' bemMod='page-utility' />
-      </Form>
+      {({ setFieldValue, errors, touched }) => (
+        <Form className={toBemClassName({ bemBlock: 'form', bemMod })}>
+          <FormikInput
+            name={Fields.PROVINCE_CODE}
+            as={Input.SELECT}
+            type={null}
+            placeholder={null}
+            className={fieldClass}>
+            <FormOptions selections={PROVINCES} />
+          </FormikInput>
+
+          <FormikInput
+            name={Fields.SPECIALTY_CODE}
+            as={Input.SELECT}
+            type={null}
+            placeholder={null}
+            className={fieldClass}>
+            <FormOptions selections={SPECIALTIES} />
+          </FormikInput>
+
+          <FormikInput
+            name={Fields.YEAR_EFFECTIVE}
+            as={Input.INPUT}
+            type='number'
+            placeholder='Year Effective'
+            className={fieldClass}
+          />
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1.5rem' }}>
+            <label htmlFor={Fields.DOCUMENT} style={{ fontWeight: 600 }}>
+              Fee Guide Document (PDF) *
+            </label>
+            <input
+              id={Fields.DOCUMENT}
+              name={Fields.DOCUMENT}
+              type='file'
+              accept='application/pdf'
+              onChange={(event) => {
+                setFieldValue(Fields.DOCUMENT, event.currentTarget.files[0]);
+              }}
+            />
+            {errors[Fields.DOCUMENT] && touched[Fields.DOCUMENT] && (
+              <span style={{ color: 'red', fontSize: '0.85rem' }}>
+                {errors[Fields.DOCUMENT]}
+              </span>
+            )}
+          </div>
+
+          <Button type='submit' label='Refine' bemMod='page-utility' />
+        </Form>
+      )}
     </Formik>
   );
 }

@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 import os
+import base64
+from io import BytesIO
 from datetime import datetime, timezone
 
 from config import api, app, bcrypt, db
@@ -13,6 +15,7 @@ from flask import (
     session,
 )
 from flask_restful import Resource
+from werkzeug.datastructures import FileStorage
 from helpers import find_falsey, find_req_fields, make_error, make_message
 from models import Account, FeeGuide, FeeGuideItem, ScheduleItem, User
 from namespace import Message as Msg
@@ -83,9 +86,10 @@ class AllFeeGuides(Resource):
         if not g.user:
             return make_error(Msg.UNAUTHORIZED, 403)
 
-        province_code = request.form.get("province_code")
-        specialty_code = request.form.get("specialty_code")
-        year_str = request.form.get("year_effective")
+        data = request.json or {}
+        province_code = data.get("province_code")
+        specialty_code = data.get("specialty_code")
+        year_str = data.get("year_effective")
 
         if falsey := find_falsey(
             {
@@ -96,8 +100,21 @@ class AllFeeGuides(Resource):
         ):
             return make_error(Msg.MISSING_FIELDS, 422, fields=falsey)
 
-        pdf_file = request.files.get("fee_guide_document")
-        if not pdf_file or pdf_file.filename == "":
+        pdf_b64 = data.get("fee_guide_document")
+        if not pdf_b64:
+            return make_error(Msg.NO_FILE(file_name="fee_guide_document"), 400)
+            
+        if "base64," in pdf_b64:
+            pdf_b64 = pdf_b64.split("base64,")[1]
+            
+        try:
+            pdf_bytes = base64.b64decode(pdf_b64)
+            pdf_file = FileStorage(
+                stream=BytesIO(pdf_bytes),
+                filename="upload.pdf",
+                content_type="application/pdf"
+            )
+        except Exception:
             return make_error(Msg.NO_FILE(file_name="fee_guide_document"), 400)
 
         try:

@@ -60,6 +60,14 @@ const Toasts = {
       SUCCESS: `Fee guide updated!`,
     },
   },
+  REFINERY: {
+    UPLOAD: {
+      BUSY: `Extracting data from document...`,
+      FAILURE: `Extraction failed.`,
+      CONFLICT: `This fee guide already exists!`,
+      SUCCESS: `Extraction complete!`,
+    },
+  },
 };
 
 const Errors = {
