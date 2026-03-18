@@ -363,6 +363,7 @@ div.content {
     0 4px 0 #805c00,
     0 5px 10px rgba(0, 0, 0, 0.3);
   transition: all 0.1s;
+  cursor: pointer;
 }
 
 .button--danger:hover,

@@ -269,6 +269,61 @@ api.add_resource(FeeGuidesByID, "/fee-guides/<int:id>")
 class FeeGuideItemsByID(GetByIDResource):
     model = FeeGuideItem
 
+    def patch(self, id):
+        if not g.user_id:
+            return make_error(Msg.NOT_AUTHENTICATED, 401)
+        if not g.user:
+            return make_error(Msg.UNAUTHORIZED, 403)
+            
+        fee_guide_item = db.session.get(FeeGuideItem, id)
+        if not fee_guide_item:
+            return make_response({"error": "not found"}, 404)
+        
+        is_admin = g.user.role == "data_admin"
+        is_manager = g.user.role == "manager"
+        
+        if not (is_admin or (is_manager and fee_guide_item.fee_guide.account_id == g.account_id)):
+            return make_error(Msg.UNAUTHORIZED, 403)
+
+        data = request.json or {}
+        
+        for field in ["fee_min_cents", "fee_max_cents", "fee_strategy", "has_L_flag", "has_E_flag", "has_PS_flag"]:
+            if field in data:
+                setattr(fee_guide_item, field, data[field])
+                
+        fee_guide_item.updated_by = g.user_id
+        
+        try:
+            db.session.commit()
+            return make_response(fee_guide_item.to_dict(), 200)
+        except Exception as e:
+            db.session.rollback()
+            return make_response({"error": str(e)}, 422)
+
+    def delete(self, id):
+        if not g.user_id:
+            return make_error(Msg.NOT_AUTHENTICATED, 401)
+        if not g.user:
+            return make_error(Msg.UNAUTHORIZED, 403)
+            
+        fee_guide_item = db.session.get(FeeGuideItem, id)
+        if not fee_guide_item:
+            return make_response({"error": "not found"}, 404)
+        
+        is_admin = g.user.role == "data_admin"
+        is_manager = g.user.role == "manager"
+        
+        if not (is_admin or (is_manager and fee_guide_item.fee_guide.account_id == g.account_id)):
+            return make_error(Msg.UNAUTHORIZED, 403)
+
+        try:
+            db.session.delete(fee_guide_item)
+            db.session.commit()
+            return make_response({}, 204)
+        except Exception as e:
+            db.session.rollback()
+            return make_response({"error": str(e)}, 422)
+
 
 api.add_resource(FeeGuideItemsByID, "/fee-guide-items/<int:id>")
 

@@ -9,7 +9,13 @@ export function FeeGuideProvider({ id, children }) {
   const [isPending, setIsPending] = useState(true);
   const isBusyRef = useRef(false);
 
-  const { getFeeGuide, patchFeeGuide, deleteFeeGuide } = useMemo(() => {
+  const {
+    getFeeGuide,
+    patchFeeGuide,
+    deleteFeeGuide,
+    patchFeeGuideItem,
+    deleteFeeGuideItem,
+  } = useMemo(() => {
     const concurrencyControls = {
       lockRef: isBusyRef,
       setPending: setIsPending,
@@ -36,8 +42,18 @@ export function FeeGuideProvider({ id, children }) {
       getFeeGuide,
       patchFeeGuide,
       deleteFeeGuide,
+      patchFeeGuideItem,
+      deleteFeeGuideItem,
     }),
-    [guide, isPending, getFeeGuide, patchFeeGuide, deleteFeeGuide],
+    [
+      guide,
+      isPending,
+      getFeeGuide,
+      patchFeeGuide,
+      deleteFeeGuide,
+      patchFeeGuideItem,
+      deleteFeeGuideItem,
+    ]
   );
 
   return (

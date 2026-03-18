@@ -9,12 +9,14 @@ import PageContent from './PageContent';
 import PATHS from '../../../../config/paths';
 import { FeeGuideProvider } from '../../context/FeeGuideContext';
 import useFeeGuide from '../../context/useFeeGuide';
+import useCollection from '../../context/useCollection';
 import useUser from '../../../user/context/useUser';
 import { UserRole } from '../../../../config/constants';
 
 function GuideViewLayout() {
   const navigate = useNavigate();
   const { guide, isPending: isLoading, deleteFeeGuide } = useFeeGuide();
+  const { getFeeGuides } = useCollection();
   const { user } = useUser();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -23,6 +25,7 @@ function GuideViewLayout() {
   const confirmDelete = () => {
     deleteFeeGuide(guide.id)
       .then(() => {
+        getFeeGuides();
         setIsModalOpen(false);
         toast.success('Fee guide deleted successfully.');
         navigate(PATHS.FRONT.DASHBOARD, { replace: true });

@@ -60,6 +60,19 @@ const Toasts = {
       SUCCESS: `Fee guide updated!`,
     },
   },
+  GUIDE_ITEM: {
+    SEARCH: {
+      NOT_FOUND: `Code not found in this fee guide.`,
+    },
+    UPDATE: {
+      FAILURE: `Failed to update item.`,
+      SUCCESS: (code) => `Code ${code} updated successfully.`,
+    },
+    DELETE: {
+      FAILURE: `Failed to delete item.`,
+      SUCCESS: `Item deleted successfully.`,
+    },
+  },
   REFINERY: {
     UPLOAD: {
       BUSY: `Extracting data from document...`,

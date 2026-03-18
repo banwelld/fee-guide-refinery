@@ -32,7 +32,10 @@ export default function PageContent({ guide, isLoading }) {
     PROVINCES.find((p) => p.code === guide.province_code)?.name
     || guide.province_code;
   const specialtyName =
-    SPECIALTIES.find((s) => s.code === guide.specialty_code)?.name
+    SPECIALTIES.find((s) => 
+      s.code === guide.specialty_code || 
+      s.name.toLowerCase().replace(/ /g, '_') === guide.specialty_code
+    )?.name
     || guide.specialty_code;
 
   return (

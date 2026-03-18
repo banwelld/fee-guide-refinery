@@ -18,6 +18,7 @@ export const fetchJson = (path, options = {}) =>
     },
     ...options,
   }).then(async (res) => {
+    if (res.status === 204) return null;
     const data = await res.json();
     if (!res.ok) {
       const error = new Error(
