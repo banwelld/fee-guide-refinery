@@ -16,15 +16,13 @@ from services.transform import (
 from services.utils.config import FEE_GUIDE_CONFIG
 from services.utils.enums import ProvinceCode, Specialty
 
-PROV = ProvinceCode.AB
-SPEC = Specialty.GEN
-YEAR = "2025"
-
-CONFIG = FEE_GUIDE_CONFIG[PROV][SPEC][YEAR]
-
-
 def build_fee_guide(
-    pdf_source: Union[FileStorage, str], config: dict, password: str = None
+    pdf_source: Union[FileStorage, str],
+    config: dict,
+    province: str,
+    specialty: str,
+    year: str,
+    password: str = None,
 ) -> List[Procedure]:
     raw_text: Iterator = generate_text_from_pdf(pdf_source, password)
     clean_lines: List[str] = remove_junk_lines(raw_text, config["junk_strategy"])
@@ -32,7 +30,7 @@ def build_fee_guide(
         clean_lines, config["normalization_rules"]
     )
 
-    return transform_lines_to_models(normalized_lines, config, PROV, SPEC, YEAR)
+    return transform_lines_to_models(normalized_lines, config, province, specialty, year)
 
 
 if __name__ == "__main__":
@@ -45,8 +43,19 @@ if __name__ == "__main__":
     header_chars = 60
     header_outline = f"{'=' * header_chars}"
 
+    prov = ProvinceCode.AB
+    spec = Specialty.GEN
+    year = "2025"
+    config = FEE_GUIDE_CONFIG[prov][spec][year]
+
     try:
-        results = build_fee_guide(pdf_source=str(pdf_path), config=CONFIG)
+        results = build_fee_guide(
+            pdf_source=str(pdf_path),
+            config=config,
+            province=prov,
+            specialty=spec,
+            year=year,
+        )
         print("\n✅ Pipeline completed successfully!")
         print(f"\nTotal records extracted: {len(results)}")
 

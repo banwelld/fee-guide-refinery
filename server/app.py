@@ -17,6 +17,11 @@ from helpers import find_falsey, find_req_fields, make_error, make_message
 from models import Account, FeeGuide, FeeGuideItem, ScheduleItem, User
 from namespace import Message as Msg
 
+from services.fee_guide_builder import build_fee_guide
+from services.load_data import load_procedures_into_db
+from services.utils.config import FEE_GUIDE_CONFIG
+from services.utils.enums import ProvinceCode, Specialty
+
 # reusable dummy hash to balance timing of authentications where the
 # user email is found with ones where it is not found
 
@@ -72,6 +77,64 @@ class AllFeeGuides(Resource):
         fee_guides = FeeGuide.query.filter(FeeGuide.account_id == g.account_id).all()
 
         return make_response([fg.to_dict() for fg in fee_guides], 200)
+
+    def post(self):
+        if not g.user_id:
+            return make_error(Msg.NOT_AUTHENTICATED, 401)
+        if not g.user:
+            return make_error(Msg.UNAUTHORIZED, 403)
+
+        province_str = request.form.get("province_code")
+        specialty_str = request.form.get("specialty_code")
+        year_str = request.form.get("year_effective")
+
+        if falsey := find_falsey({
+            "province_code": province_str,
+            "specialty_code": specialty_str,
+            "year_effective": year_str
+        }):
+            return make_error(Msg.MISSING_FIELDS, 422, fields=falsey)
+        
+        pdf_file = request.files.get("fee_guide_document")
+        if not pdf_file or pdf_file.filename == "":
+            return make_error("No fee_guide_document file provided", 400)
+
+        try:
+            prov_enum = ProvinceCode[province_str.upper()]
+            spec_enum = Specialty[specialty_str.upper()]
+        except KeyError:
+            return make_error("Invalid province or specialty code", 422)
+
+        try:
+            config = FEE_GUIDE_CONFIG[prov_enum][spec_enum][year_str]
+        except KeyError:
+            return make_error(f"No configuration found for {province_str} {specialty_str} {year_str}", 422)
+
+        try:
+            procedures = build_fee_guide(
+                pdf_source=pdf_file,
+                config=config,
+                province=prov_enum.value,
+                specialty=spec_enum.value,
+                year=year_str,
+            )
+        except Exception as e:
+            return make_error(f"Failed to extract text from PDF: {str(e)}", 422)
+
+        try:
+            fee_guide = load_procedures_into_db(
+                procedures=procedures,
+                province=prov_enum.value,
+                specialty=spec_enum.value,
+                year=int(year_str),
+                account_id=g.account_id,
+                user_id=g.user_id,
+            )
+        except Exception as e:
+            db.session.rollback()
+            return make_error(f"Failed to load procedures into DB: {str(e)}", 422)
+
+        return make_response(fee_guide.to_dict(), 201)
 
 
 api.add_resource(AllFeeGuides, "/fee-guides")

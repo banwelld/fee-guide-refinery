@@ -70,6 +70,7 @@ def _get_or_create_fee_guide_item(
     schedule_item: ScheduleItem,
     proc: ProcedureModel,
     is_prov_spec: bool,
+    user_id: int,
 ) -> FeeGuideItem:
     """
     Creates a FeeGuideItem if it doesn't already exist for the guide and item combo.
@@ -89,6 +90,7 @@ def _get_or_create_fee_guide_item(
             is_province_specific=is_prov_spec,
             fee_guide_id=fee_guide.id,
             schedule_item_id=schedule_item.id,
+            updated_by=user_id,
         )
         db.session.add(fgi)
 
@@ -101,6 +103,7 @@ def load_procedures_into_db(
     specialty: str,
     year: int,
     account_id: int,
+    user_id: int,
 ) -> FeeGuide:
     """
     Orchestrates the loading of parsed procedures into the database.
@@ -109,7 +112,9 @@ def load_procedures_into_db(
 
     for proc in procedures:
         schedule_item, is_prov_spec = _get_or_create_schedule_item(proc, province)
-        _get_or_create_fee_guide_item(fee_guide, schedule_item, proc, is_prov_spec)
+        _get_or_create_fee_guide_item(
+            fee_guide, schedule_item, proc, is_prov_spec, user_id
+        )
 
     db.session.commit()
     return fee_guide
