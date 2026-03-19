@@ -1,14 +1,9 @@
-import { useNavigate } from 'react-router-dom';
-import SectionFrame from '../../../../components/ui/frames/SectionFrame';
-import Button from '../../../../components/ui/Button';
-import PATHS from '../../../../config/paths';
-import PROVINCES from '../../../refinery/config/provinces';
-import SPECIALTIES from '../../../refinery/config/specialties';
-import FeeGuideItemsTable from '../../components/FeeGuideItemsTable';
+import SectionFrame from "../../../../components/ui/frames/SectionFrame";
+import PROVINCES from "../../../refinery/config/provinces";
+import SPECIALTIES from "../../../refinery/config/specialties";
+import FeeGuideItemsTable from "../../components/FeeGuideItemsTable";
 
 export default function PageContent({ guide, isLoading, search }) {
-  const navigate = useNavigate();
-
   if (isLoading) {
     return (
       <div className='loading-state'>
@@ -22,25 +17,23 @@ export default function PageContent({ guide, isLoading, search }) {
       <SectionFrame
         className='content__section content__section--table'
         heading='Oops...'
-        isBase={true}>
+        isBase={true}
+      >
         <h2>Guide Not Found</h2>
       </SectionFrame>
     );
   }
 
-  const provinceName = PROVINCES.find(
-    (p) => p.code === guide.provinceCode,
-  )?.name;
+  const provinceName = PROVINCES.find((p) => p.code === guide.provinceCode)?.name;
 
-  const specialtyName = SPECIALTIES.find(
-    (s) => s.code === guide.specialtyCode,
-  )?.name;
+  const specialtyName = SPECIALTIES.find((s) => s.code === guide.specialtyCode)?.name;
 
   return (
     <SectionFrame
       className='content__section content__section--table'
       heading={`${guide.yearEffective} ${provinceName} - ${specialtyName}`}
-      isBase={true}>
+      isBase={true}
+    >
       <FeeGuideItemsTable items={guide.feeGuideItems} search={search} />
     </SectionFrame>
   );

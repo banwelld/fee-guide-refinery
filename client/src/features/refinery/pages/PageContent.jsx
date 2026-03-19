@@ -1,5 +1,5 @@
-import SectionFrame from '../../../components/ui/frames/SectionFrame';
-import { Headings, UiText } from '../../../config/constants';
+import SectionFrame from "../../../components/ui/frames/SectionFrame";
+import { Headings, UiText } from "../../../config/constants";
 
 export default function PageContent({ children }) {
   const sectionProps = {
@@ -7,5 +7,9 @@ export default function PageContent({ children }) {
     uiText: UiText.REFINERY,
   };
 
-  return <SectionFrame {...sectionProps}>{children}</SectionFrame>;
+  return (
+    <SectionFrame {...sectionProps} isRoot={true}>
+      {children}
+    </SectionFrame>
+  );
 }

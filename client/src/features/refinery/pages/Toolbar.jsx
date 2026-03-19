@@ -1,5 +1,5 @@
-import ToolbarSection from '../../../components/ui/frames/ToolbarSection';
+import ToolbarSection from "../../../components/ui/frames/ToolbarSection";
 
 export default function Toolbar({ toolbarControls }) {
-  return <ToolbarSection heading='Members'>{toolbarControls}</ToolbarSection>;
+  return <ToolbarSection heading=''>{toolbarControls}</ToolbarSection>;
 }
