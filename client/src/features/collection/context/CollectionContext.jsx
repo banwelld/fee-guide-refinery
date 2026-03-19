@@ -27,7 +27,7 @@ export function CollectionProvider({ children }) {
 
   // fetch fee guides on mount
   useEffect(() => {
-    getFeeGuides().catch(() => {
+    getFeeGuides()?.catch(() => {
       toast.error(Toasts.COLLECTION.LOAD.FAILURE);
     });
   }, [getFeeGuides]);

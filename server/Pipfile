@@ -15,9 +15,9 @@ gunicorn = "*"
 alembic = "*"
 pytest = "*"
 pdfplumber = "*"
-pydantic = "*"
 flask = "*"
 sqlalchemy-serializer = "*"
+pydantic = "*"
 
 [dev-packages]
 

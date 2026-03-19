@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import PageFrame from '../../../../components/ui/frames/PageFrame';
 import Toolbar from './Toolbar';
@@ -10,12 +10,14 @@ function GuideViewLayout() {
   const { id } = useParams();
   const { guide, isPending: isLoading, getFeeGuide } = useFeeGuide();
   const [searchCode, setSearchCode] = useState(null);
+  const lastFetchedId = useRef(null);
 
   useEffect(() => {
-    if (id && guide?.id !== parseInt(id, 10)) {
-      getFeeGuide(id);
+    if (id && lastFetchedId.current !== id) {
+      lastFetchedId.current = id;
+      getFeeGuide(id)?.catch(() => {});
     }
-  }, [guide, id, getFeeGuide]);
+  }, [id, getFeeGuide]);
 
   const toolbarControls = (
     <GuideToolbarControls
