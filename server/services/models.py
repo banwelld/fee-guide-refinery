@@ -3,7 +3,7 @@ from __future__ import (
 )
 
 import datetime
-from typing import List, Union
+from typing import List
 
 from pydantic import BaseModel, Field, model_validator
 
@@ -75,8 +75,7 @@ class Procedure(ScheduleItem):
             raise ValueError("Minimum fee cannot be greater than maximum fee")
         return self
 
-
-# recursively defined types would go here
+    # recursively defined types would go here
 
     pass
 

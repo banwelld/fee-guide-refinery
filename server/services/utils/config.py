@@ -77,4 +77,32 @@ FEE_GUIDE_CONFIG = {
             },
         },
     },
+    "ON": {
+        "general_practice": {
+            "2022": {
+                "junk_strategy": [
+                    {
+                        "method": "drop_all",
+                        "precursor_key": "Adjunctive General Services 90000 65",
+                        "terminal_key": "8 Suggested Fee Guide 2022 | General Practitioners Copyright, Ontario Dental Association 1990",
+                    },
+                    {
+                        "method": "drop_junk",
+                        "precursor_key": "99713 +H.S.T.",
+                        "terminal_key": "99777 +PS Charges for professional services billed to the dentist and passed through to the patient I.C.",
+                        "patterns": [],
+                    },
+                ],
+                "normalization_rules": [],
+                "formatting": {
+                    "expenses": {"L": "+L", "E": "+E", "PS": "+PS"},
+                    "fee_strategy": {
+                        "range_separator": "–",
+                        "no_fee": "No Fee",
+                        "IC": "I.C.",
+                    },
+                },
+            },
+        },
+    },
 }
