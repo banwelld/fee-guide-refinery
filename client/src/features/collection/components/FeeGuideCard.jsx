@@ -3,8 +3,10 @@ import { getProvinceLogo, getProvinceName } from '../utils/logoMapping';
 import PATHS from '../../../config/paths';
 import { LinkLabel as LL } from '../../../config/constants';
 import SPECIALTIES from '../../refinery/config/specialties';
+import useFeeGuide from '../context/useFeeGuide';
 
 export default function FeeGuideCard({ feeGuide }) {
+  const { getFeeGuide } = useFeeGuide();
   const { id, provinceCode, yearEffective, specialtyCode, updatedAt, createdAt } = feeGuide;
 
   const logo = getProvinceLogo(provinceCode);
@@ -42,6 +44,7 @@ export default function FeeGuideCard({ feeGuide }) {
       <div className='fg-card__actions'>
         <Link
           to={`${PATHS.FRONT.MAINTENANCE}/${id}`}
+          onClick={() => getFeeGuide(id)}
           className='button button--primary'>
           {LL.REFINE}
         </Link>

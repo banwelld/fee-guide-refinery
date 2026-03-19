@@ -7,6 +7,8 @@ import {
 } from '../../../utils/helpers';
 import Feedback from '../../../config/feedback';
 import PATHS from '../../../config/paths';
+import { toClient as guideToClient, toServer as guideToServer } from '../utils/feeGuideSerializer';
+import { toClient as itemToClient, toServer as itemToServer } from '../utils/feeGuideItemSerializer';
 
 const { Errors } = Feedback;
 
@@ -16,8 +18,9 @@ export function createFeeGuideController({ setGuide, concurrencyControls }) {
       doFetch: () =>
         getData(PATHS.BACK.GUIDE_ID(id))
           .then((data) => {
-            setGuide(data);
-            return data;
+            const guide = guideToClient(data);
+            setGuide(guide);
+            return guide;
           })
           .catch((err) => {
             logException(Errors.FAILURE.RECEIVE, err);
@@ -26,13 +29,15 @@ export function createFeeGuideController({ setGuide, concurrencyControls }) {
       ...concurrencyControls,
     });
 
-  const patchFeeGuide = (id, payload) =>
-    runExclusive({
+  const patchFeeGuide = (id, clientData) => {
+    const payload = guideToServer(clientData);
+    return runExclusive({
       doFetch: () =>
         patchData(PATHS.BACK.GUIDE_ID(id), payload)
           .then((data) => {
-            setGuide(data);
-            return data;
+            const guide = guideToClient(data);
+            setGuide(guide);
+            return guide;
           })
           .catch((err) => {
             logException(Errors.FAILURE.UPDATE, err);
@@ -40,6 +45,7 @@ export function createFeeGuideController({ setGuide, concurrencyControls }) {
           }),
       ...concurrencyControls,
     });
+  };
 
   const deleteFeeGuide = (id) =>
     runExclusive({
@@ -56,19 +62,21 @@ export function createFeeGuideController({ setGuide, concurrencyControls }) {
       ...concurrencyControls,
     });
 
-  const patchFeeGuideItem = (guideId, itemId, payload) =>
-    runExclusive({
+  const patchFeeGuideItem = (guideId, itemId, clientData) => {
+    const payload = itemToServer(clientData);
+    return runExclusive({
       doFetch: () =>
         patchData(PATHS.BACK.GUIDE_ITEM_ID(itemId), payload)
           .then((data) => {
+            const updatedItem = itemToClient(data);
             setGuide((prev) => {
               if (!prev || prev.id !== guideId) return prev;
-              const items = prev.fee_guide_items.map((i) =>
-                i.id === itemId ? data : i
+              const items = prev.feeGuideItems.map((i) =>
+                i.id === itemId ? updatedItem : i
               );
-              return { ...prev, fee_guide_items: items };
+              return { ...prev, feeGuideItems: items };
             });
-            return data;
+            return updatedItem;
           })
           .catch((err) => {
             logException(Errors.FAILURE.UPDATE, err);
@@ -76,6 +84,7 @@ export function createFeeGuideController({ setGuide, concurrencyControls }) {
           }),
       ...concurrencyControls,
     });
+  };
 
   const deleteFeeGuideItem = (guideId, itemId) =>
     runExclusive({
@@ -84,8 +93,8 @@ export function createFeeGuideController({ setGuide, concurrencyControls }) {
           .then(() => {
             setGuide((prev) => {
               if (!prev || prev.id !== guideId) return prev;
-              const items = prev.fee_guide_items.filter((i) => i.id !== itemId);
-              return { ...prev, fee_guide_items: items };
+              const items = prev.feeGuideItems.filter((i) => i.id !== itemId);
+              return { ...prev, feeGuideItems: items };
             });
             return true;
           })

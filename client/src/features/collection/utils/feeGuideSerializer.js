@@ -1,3 +1,5 @@
+import * as feeGuideItemSerializer from './feeGuideItemSerializer';
+
 export const toClient = (dbData) => ({
   id: dbData.id,
   provinceCode: dbData.province_code,
@@ -6,6 +8,7 @@ export const toClient = (dbData) => ({
   accountId: dbData.account_id,
   createdAt: dbData.created_at,
   updatedAt: dbData.updated_at,
+  feeGuideItems: dbData.fee_guide_items?.map(feeGuideItemSerializer.toClient) || [],
 });
 
 export const toServer = (clientData) => ({

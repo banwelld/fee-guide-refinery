@@ -103,7 +103,7 @@ def _get_fee_strategy_data(text: str, strategy_patterns: Dict) -> Dict:
         val1 = range_match.group(1).replace(",", "")
         val2 = range_match.group(2).replace(",", "")
         return {
-            "strategy": "RANGE",
+            "strategy": "FEE RANGE",
             "min": int(float(val1) * 100),
             "max": int(float(val2) * 100),
             "raw_match": range_match.group(0),
@@ -114,7 +114,7 @@ def _get_fee_strategy_data(text: str, strategy_patterns: Dict) -> Dict:
     if fee_match:
         val = fee_match.group(1).replace(",", "")
         return {
-            "strategy": "SINGLE",
+            "strategy": "BASE FEE",
             "min": int(float(val) * 100),
             "max": int(float(val) * 100),
             "raw_match": fee_match.group(0),

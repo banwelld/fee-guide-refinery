@@ -4,7 +4,7 @@ import { createFeeGuideController } from './FeeGuideController';
 
 export const FeeGuideContext = createContext(null);
 
-export function FeeGuideProvider({ id, children }) {
+export function FeeGuideProvider({ children }) {
   const [guide, setGuide] = useState(null);
   const [isPending, setIsPending] = useState(true);
   const isBusyRef = useRef(false);
@@ -26,14 +26,6 @@ export function FeeGuideProvider({ id, children }) {
       concurrencyControls,
     });
   }, []);
-
-  useEffect(() => {
-    if (id) {
-      getFeeGuide(id).catch(() => {
-        toast.error('Failed to load fee guide details.');
-      });
-    }
-  }, [id, getFeeGuide]);
 
   const ctx = useMemo(
     () => ({

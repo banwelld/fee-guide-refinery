@@ -30,7 +30,7 @@ export const Headings = {
 };
 
 export const LinkLabel = {
-  REFINE: 'Refine Fee Guide',
+  REFINE: 'View/Edit Fee Guide',
 };
 
 export const UiText = {

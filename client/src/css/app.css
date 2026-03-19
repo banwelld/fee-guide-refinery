@@ -102,6 +102,73 @@ div.content {
   background: var(--base-bg);
 }
 
+.content__section {
+  display: block;
+  margin: 0 auto;
+}
+
+.content__section.base {
+  width: 80%;
+
+  h1 {
+    text-align: center;
+    color: var(--header-color);
+    margin-bottom: 0.75rem;
+  }
+
+  h2 {
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+  }
+
+  > .content__section {
+    width: 80%;
+    padding-top: 2rem;
+  }
+
+  > * > .content__container--ui-text {
+    text-align: center;
+    width: 80%;
+    font-size: 1.3rem;
+    color: var(--text-muted);
+    font-style: italic;
+    margin: 0 auto;
+  }
+}
+
+.content__header {
+  color: var(--color-frame-med);
+  margin-bottom: var(--margin-section-min);
+}
+
+.content__header--root {
+  color: var(--color-brand2);
+}
+
+.content__intro:has(.content__ui-text) {
+  margin-bottom: 2.5rem;
+}
+
+.content__ui-text {
+  padding: 0.75rem 1ch;
+  width: 85%;
+}
+
+.content__ui-text > *:not(:last-of-type) {
+  margin-block-end: 1rem;
+}
+
+.content__image--public-view {
+  height: 200px;
+  border-radius: 4px;
+  margin: 2rem 3ch 0;
+}
+
+.content__container--images {
+  width: fit-content;
+  margin: 0 auto;
+}
+
 .fg-list__container {
   display: flex;
   flex-direction: column;
@@ -295,6 +362,7 @@ div.content {
   transition: all 0.2s;
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
+  white-space: nowrap;
 }
 
 .list--nav-links a:hover,
@@ -331,8 +399,18 @@ div.content {
   align-items: center;
 }
 
+.input-wrapper:has(input[type='checkbox']) {
+  flex-direction: row;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
 .input-wrapper > * {
   width: 100%;
+}
+
+.input-wrapper:has(input[type='checkbox']) > * {
+  width: auto;
 }
 
 .input-wrapper label {
@@ -343,6 +421,11 @@ div.content {
   letter-spacing: 0.05em;
   margin-top: 0.1rem;
   text-align: start;
+}
+
+.input-wrapper:has(input[type='checkbox']) label {
+  margin-top: 0;
+  line-height: 1;
 }
 
 .button--danger,
@@ -420,4 +503,133 @@ div.content {
   color: var(--header-color);
   text-align: center;
   margin-bottom: 1rem;
+}
+
+.table--fee-guide {
+  thead {
+    height: 2.2rem;
+  }
+  th {
+    text-align: start;
+  }
+  tr {
+    height: 1.4rem;
+  }
+  .table__column--code {
+    width: 8ch;
+  }
+  .table__column--name {
+    width: 25ch;
+  }
+  .table__column--fee {
+    width: 10ch;
+  }
+  .table__column--fee {
+    width: 10ch;
+  }
+  .table__column--strategy {
+    width: 12ch;
+  }
+  .table__column--flags {
+    width: 8ch;
+  }
+}
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+div.item-filter__container {
+  padding-top: 2rem;
+}
+
+.toolbar button {
+  width: 15ch;
+}
+
+.toolbar > .content__section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.item-filter__container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+.heading--update-form {
+  margin-top: 2rem;
+}
+
+.form__item-update {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.field__select--export-guide {
+  width: 100%;
+  margin-bottom: 1rem;
+  padding: 0.4rem;
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+}
+
+.field__select--export-format {
+  width: 100%;
+  margin-bottom: 2rem;
+  padding: 0.4rem;
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+}
+
+.content__ui-text--export {
+  text-align: center;
+  width: 80%;
+  margin: 2rem auto;
 }

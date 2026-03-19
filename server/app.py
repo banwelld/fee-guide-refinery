@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 
-import os
 import base64
-from io import BytesIO
 from datetime import datetime, timezone
+from io import BytesIO
 
 from config import api, app, bcrypt, db
 from flask import (
@@ -11,11 +10,9 @@ from flask import (
     jsonify,
     make_response,
     request,
-    send_from_directory,
     session,
 )
 from flask_restful import Resource
-from werkzeug.datastructures import FileStorage
 from helpers import find_falsey, find_req_fields, make_error, make_message
 from models import Account, FeeGuide, FeeGuideItem, ScheduleItem, User
 from namespace import Message as Msg
@@ -23,6 +20,7 @@ from services.fee_guide_builder import build_fee_guide
 from services.load_data import load_procedures_into_db
 from services.utils.config import FEE_GUIDE_CONFIG
 from services.utils.enums import ProvinceCode, Specialty
+from werkzeug.datastructures import FileStorage
 
 # reusable dummy hash to balance timing of authentications where the
 # user email is found with ones where it is not found
@@ -42,31 +40,7 @@ def handle_value_error(e):
     return make_response(jsonify({"error": str(e)}), 422)
 
 
-# superclass to give all members the get-all functionality
-class GetAllResource(Resource):
-    model = None
 
-    def get(self):
-        item_list = [i.to_dict() for i in self.model.query.all()]
-        return make_response(item_list, 200)
-
-
-# superclass to give all members the get-by-id functionality
-class GetByIDResource(Resource):
-    model = None
-
-    def get(self, id):
-        item = db.session.get(self.model, id)
-        if not item:
-            return make_response({"error": "not found"}, 404)
-        return make_response(item.to_dict(), 200)
-
-
-class AllScheduleItems(GetAllResource):
-    model = ScheduleItem
-
-
-api.add_resource(AllScheduleItems, "/schedule-items")
 
 
 class AllFeeGuides(Resource):
@@ -103,16 +77,16 @@ class AllFeeGuides(Resource):
         pdf_b64 = data.get("fee_guide_document")
         if not pdf_b64:
             return make_error(Msg.NO_FILE, 400, file_name="fee_guide_document")
-            
+
         if "base64," in pdf_b64:
             pdf_b64 = pdf_b64.split("base64,")[1]
-            
+
         try:
             pdf_bytes = base64.b64decode(pdf_b64)
             pdf_file = FileStorage(
                 stream=BytesIO(pdf_bytes),
                 filename="upload.pdf",
-                content_type="application/pdf"
+                content_type="application/pdf",
             )
         except Exception:
             return make_error(Msg.NO_FILE, 400, file_name="fee_guide_document")
@@ -164,7 +138,7 @@ class AllFeeGuides(Resource):
             )
             db.session.add(fee_guide)
             db.session.flush()
-                
+
             fee_guide = load_procedures_into_db(
                 fee_guide=fee_guide,
                 procedures=procedures,
@@ -180,25 +154,9 @@ class AllFeeGuides(Resource):
 api.add_resource(AllFeeGuides, "/fee-guides")
 
 
-class AllFeeGuideItems(GetAllResource):
-    model = FeeGuideItem
-
-
-api.add_resource(AllFeeGuideItems, "/fee-guide-items")
-
-
-class AllAccounts(GetAllResource):
-    model = Account
-
-
-api.add_resource(AllAccounts, "/accounts")
 
 
 class AllUsers(Resource):
-    def get(self):
-        item_list = [i.to_dict() for i in User.query.all()]
-        return make_response(item_list, 200)
-
     def post(self):
         if g.user:
             return make_error(Msg.UNAUTHORIZED, 403)
@@ -228,29 +186,33 @@ class AllUsers(Resource):
 api.add_resource(AllUsers, "/users")
 
 
-class ScheduleItemsByID(GetByIDResource):
-    model = ScheduleItem
 
 
-api.add_resource(ScheduleItemsByID, "/schedule-items/<int:id>")
+class FeeGuidesByID(Resource):
+    def get(self, id):
+        if not g.user_id:
+            return make_error(Msg.NOT_AUTHENTICATED, 401)
+        if not g.user:
+            return make_error(Msg.UNAUTHORIZED, 403)
 
-
-class FeeGuidesByID(GetByIDResource):
-    model = FeeGuide
+        item = db.session.get(FeeGuide, id)
+        if not item:
+            return make_response({"error": "not found"}, 404)
+        return make_response(item.to_dict(), 200)
 
     def delete(self, id):
         if not g.user_id:
             return make_error(Msg.NOT_AUTHENTICATED, 401)
         if not g.user:
             return make_error(Msg.UNAUTHORIZED, 403)
-            
+
         fee_guide = db.session.get(FeeGuide, id)
         if not fee_guide:
             return make_response({"error": "not found"}, 404)
-        
+
         is_admin = g.user.role == "data_admin"
         is_manager = g.user.role == "manager"
-        
+
         if not (is_admin or (is_manager and fee_guide.account_id == g.account_id)):
             return make_error(Msg.UNAUTHORIZED, 403)
 
@@ -266,33 +228,41 @@ class FeeGuidesByID(GetByIDResource):
 api.add_resource(FeeGuidesByID, "/fee-guides/<int:id>")
 
 
-class FeeGuideItemsByID(GetByIDResource):
-    model = FeeGuideItem
-
+class FeeGuideItemsByID(Resource):
     def patch(self, id):
         if not g.user_id:
             return make_error(Msg.NOT_AUTHENTICATED, 401)
         if not g.user:
             return make_error(Msg.UNAUTHORIZED, 403)
-            
+
         fee_guide_item = db.session.get(FeeGuideItem, id)
         if not fee_guide_item:
             return make_response({"error": "not found"}, 404)
-        
+
         is_admin = g.user.role == "data_admin"
         is_manager = g.user.role == "manager"
-        
-        if not (is_admin or (is_manager and fee_guide_item.fee_guide.account_id == g.account_id)):
+
+        if not (
+            is_admin
+            or (is_manager and fee_guide_item.fee_guide.account_id == g.account_id)
+        ):
             return make_error(Msg.UNAUTHORIZED, 403)
 
         data = request.json or {}
-        
-        for field in ["fee_min_cents", "fee_max_cents", "fee_strategy", "has_L_flag", "has_E_flag", "has_PS_flag"]:
+
+        for field in [
+            "fee_min_cents",
+            "fee_max_cents",
+            "fee_strategy",
+            "has_L_flag",
+            "has_E_flag",
+            "has_PS_flag",
+        ]:
             if field in data:
                 setattr(fee_guide_item, field, data[field])
-                
+
         fee_guide_item.updated_by = g.user_id
-        
+
         try:
             db.session.commit()
             return make_response(fee_guide_item.to_dict(), 200)
@@ -305,15 +275,18 @@ class FeeGuideItemsByID(GetByIDResource):
             return make_error(Msg.NOT_AUTHENTICATED, 401)
         if not g.user:
             return make_error(Msg.UNAUTHORIZED, 403)
-            
+
         fee_guide_item = db.session.get(FeeGuideItem, id)
         if not fee_guide_item:
             return make_response({"error": "not found"}, 404)
-        
+
         is_admin = g.user.role == "data_admin"
         is_manager = g.user.role == "manager"
-        
-        if not (is_admin or (is_manager and fee_guide_item.fee_guide.account_id == g.account_id)):
+
+        if not (
+            is_admin
+            or (is_manager and fee_guide_item.fee_guide.account_id == g.account_id)
+        ):
             return make_error(Msg.UNAUTHORIZED, 403)
 
         try:
@@ -328,18 +301,6 @@ class FeeGuideItemsByID(GetByIDResource):
 api.add_resource(FeeGuideItemsByID, "/fee-guide-items/<int:id>")
 
 
-class AccountsByID(GetByIDResource):
-    model = Account
-
-
-api.add_resource(AccountsByID, "/accounts/<int:id>")
-
-
-class UsersByID(GetByIDResource):
-    model = User
-
-
-api.add_resource(UsersByID, "/users/<int:id>")
 
 
 class Session(Resource):

@@ -8,16 +8,6 @@ export const NAV_LINK_CONFIG = [
     visibleTo: [Role.MANAGER, Role.USER, Role.ADMIN],
   },
   {
-    path: PATHS.FRONT.MAINTENANCE,
-    label: 'Guide Maintenance',
-    visibleTo: [Role.MANAGER],
-  },
-  {
-    path: PATHS.FRONT.USER_ACCESS,
-    label: 'Manage Access',
-    visibleTo: [Role.MANAGER],
-  },
-  {
     path: PATHS.FRONT.EXPORT,
     label: 'Export Data',
     visibleTo: [Role.MANAGER, Role.ADMIN],

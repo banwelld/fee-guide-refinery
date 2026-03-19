@@ -1,13 +1,12 @@
 const PATHS = Object.freeze({
   FRONT: {
     DASHBOARD: '/dashboard',
-    EXPORT: '/products/admin',
+    EXPORT: '/fee-guide/export',
     HOME: '/',
     MAINTENANCE: `/fee-guide/update`,
-    CREATE: '/fee-guide/create',
     USER_ACCESS: `/user/access`,
     CONTACT_US: '/#contact',
-    REFINERY: '/refine',
+    REFINERY: '/fee-guide/refine',
   },
   BACK: {
     GUIDES: '/api/fee-guides',

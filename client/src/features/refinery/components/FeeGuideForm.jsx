@@ -8,8 +8,10 @@ import FormOptions from './FormOptions';
 import PROVINCES from '../config/provinces';
 import SPECIALTIES from '../config/specialties';
 
-import { InputTypes as Input, DEFAULT_SELECT_VALUE as DEFAULT } from '../../../config/constants';
-import { toBemClassName } from '../../../utils/helpers';
+import {
+  InputTypes as Input,
+  DEFAULT_SELECT_VALUE as DEFAULT,
+} from '../../../config/constants';
 import * as v from '../../../utils/validation';
 
 export const Fields = Object.freeze({
@@ -33,7 +35,22 @@ const validationSchema = yup.object({
   [Fields.DOCUMENT]: v.validateFile,
 });
 
-const bemMod = 'refinery-form';
+const getYearOptions = () => {
+  const currentDate = new Date();
+  const currentYear = currentDate.getFullYear();
+  const currentMonth = currentDate.getMonth();
+
+  const years = [];
+
+  // add the next year on 1 october, when fee guides drop
+  if (currentMonth >= 9) {
+    years.push(currentYear + 1);
+  }
+  for (let i = 0; i < 5; i++) {
+    years.push(currentYear - i);
+  }
+  return years;
+};
 
 export default function FeeGuideForm({ onSubmit }) {
   const formikProps = {
@@ -42,44 +59,35 @@ export default function FeeGuideForm({ onSubmit }) {
     onSubmit,
   };
 
-  const fieldClass = toBemClassName({
-    bemBlock: 'form',
-    bemElem: 'field',
-    bemMod,
-  });
-
   return (
-    <Formik {...formikProps}>
+    <Formik {...formikProps} className='form form--refinery'>
       {({ setFieldValue, errors, touched }) => (
-        <Form className={toBemClassName({ bemBlock: 'form', bemMod })}>
+        <Form className='form__container'>
           <FormikInput
             name={Fields.PROVINCE_CODE}
             as={Input.SELECT}
-            type={null}
-            placeholder={null}
-            className={fieldClass}>
+            autoFocus={true}
+            className='field field__select'>
             <FormOptions selections={PROVINCES} />
           </FormikInput>
-
           <FormikInput
             name={Fields.SPECIALTY_CODE}
             as={Input.SELECT}
-            type={null}
-            placeholder={null}
-            className={fieldClass}>
+            className='field field__select'>
             <FormOptions selections={SPECIALTIES} />
           </FormikInput>
-
           <FormikInput
             name={Fields.YEAR_EFFECTIVE}
-            as={Input.INPUT}
-            type='number'
-            placeholder='Year Effective'
-            className={fieldClass}
-          />
+            as={Input.SELECT}
+            className='field field__select'>
+            <FormOptions selections={getYearOptions()} isPrimitives={true} />
+          </FormikInput>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1.5rem' }}>
-            <label htmlFor={Fields.DOCUMENT} style={{ fontWeight: 600 }}>
+          <div className='form__container--input'>
+            <label
+              className='form__label'
+              htmlFor={Fields.DOCUMENT}
+              style={{ fontWeight: 600 }}>
               Fee Guide Document (PDF) *
             </label>
             <input
@@ -90,11 +98,10 @@ export default function FeeGuideForm({ onSubmit }) {
               onChange={(event) => {
                 setFieldValue(Fields.DOCUMENT, event.currentTarget.files[0]);
               }}
+              className='field field__file'
             />
             {errors[Fields.DOCUMENT] && touched[Fields.DOCUMENT] && (
-              <span style={{ color: 'red', fontSize: '0.85rem' }}>
-                {errors[Fields.DOCUMENT]}
-              </span>
+              <span>{' ' + errors[Fields.DOCUMENT]}</span>
             )}
           </div>
 

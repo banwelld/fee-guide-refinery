@@ -1,10 +1,14 @@
 import * as userSerializer from '../features/user/utils/userSerializer';
 import * as feeGuideSerializer from '../features/collection/utils/feeGuideSerializer';
+import * as feeGuideItemSerializer from '../features/collection/utils/feeGuideItemSerializer';
+import * as scheduleItemSerializer from '../features/collection/utils/scheduleItemSerializer';
 
 // map type names to serializer modules
 const serializers = {
   user: userSerializer,
   feeGuide: feeGuideSerializer,
+  feeGuideItem: feeGuideItemSerializer,
+  scheduleItem: scheduleItemSerializer,
 };
 
 export const serialize = (data, type, direction = 'toClient') => {

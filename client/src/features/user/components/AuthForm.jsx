@@ -40,7 +40,7 @@ export default function AuthForm({ onSubmit }) {
           placeholder='e.g., john.doe@domain.com'
           autoComplete='username'
           autoFocus={true}
-          className='form__input form__input--input'
+          className='field field--input'
         />
         <FormikInput
           name={Fields.PASSWORD}
@@ -49,7 +49,7 @@ export default function AuthForm({ onSubmit }) {
           type={Input.PASSWORD}
           placeholder=''
           autoComplete='current-password'
-          className='form__input form__input--input'
+          className='field field--input'
         />
         <Button type='submit' label='Login' className='button--session-state' />
       </Form>

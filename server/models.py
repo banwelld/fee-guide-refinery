@@ -15,6 +15,10 @@ from sqlalchemy_serializer import SerializerMixin
 class FeeGuide(db.Model, SerializerMixin):
     __tablename__ = "fee_guides"
     serialize_rules = ("-account.fee_guides", "-fee_guide_items.fee_guide")
+    serialize_types = (
+        (ProvinceCode, lambda x: x.name),
+        (Specialty, lambda x: x.name),
+    )
 
     id = db.Column(db.Integer, primary_key=True)
     province_code = db.Column(db.Enum(ProvinceCode), nullable=False)
