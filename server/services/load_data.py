@@ -1,10 +1,9 @@
 from typing import List
+
 from config import db
-from models import FeeGuide, ScheduleItem, FeeGuideItem
+from models import FeeGuide, FeeGuideItem, ScheduleItem
+
 from services.models import Procedure as ProcedureModel
-
-
-
 
 
 def _get_or_create_schedule_item(
@@ -22,13 +21,13 @@ def _get_or_create_schedule_item(
         # Code not in master list or any previous guide
         # Derive category for province-specific codes
         category_code = f"{proc.code[0]}0000" if proc.code else "00000"
-        
+
         schedule_item = ScheduleItem(
-            name=proc.name, 
-            code=proc.code, 
-            is_master=False, 
+            name=proc.name,
+            code=proc.code,
+            is_master=False,
             provinces=province,
-            parent_category=category_code
+            parent_category=category_code,
         )
         db.session.add(schedule_item)
         db.session.flush()
@@ -38,8 +37,10 @@ def _get_or_create_schedule_item(
             is_prov_spec = True
             # Update category if missing for existing province-specific item
             if not schedule_item.parent_category:
-                schedule_item.parent_category = f"{proc.code[0]}0000" if proc.code else "00000"
-                
+                schedule_item.parent_category = (
+                    f"{proc.code[0]}0000" if proc.code else "00000"
+                )
+
             # If it's a province-specific code, track this province
             current_provinces = [
                 p.strip() for p in schedule_item.provinces.split(",") if p.strip()
@@ -96,7 +97,9 @@ def load_procedures_into_db(
     """
 
     for proc in procedures:
-        schedule_item, is_prov_spec = _get_or_create_schedule_item(proc, fee_guide.province_code)
+        schedule_item, is_prov_spec = _get_or_create_schedule_item(
+            proc, fee_guide.province_code
+        )
         _get_or_create_fee_guide_item(
             fee_guide, schedule_item, proc, is_prov_spec, user_id
         )

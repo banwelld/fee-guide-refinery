@@ -1,14 +1,14 @@
-import { Navigate } from 'react-router-dom';
+import { Navigate } from "react-router-dom";
 
-import toast from 'react-hot-toast';
+import toast from "react-hot-toast";
 
-import useUser from '../features/user/context/useUser';
+import useUser from "../features/user/context/useUser";
 
-import ErrorPage from '../pages/ErrorPage';
+import ErrorPage from "../pages/ErrorPage";
 
-import Feedback from '../config/feedback';
-import { UserRole } from '../config/constants';
-import PATHS from '../config/paths';
+import Feedback from "../config/feedback";
+import { UserRole } from "../config/constants";
+import PATHS from "../config/paths";
 
 const { Toasts } = Feedback;
 
@@ -20,7 +20,7 @@ export function AdminRoute({ children }) {
 
   if (!sessionLoaded) return null;
 
-  const isAdmin = user?.role === UserRole.ADMIN;
+  const isAdmin = user?.role in (UserRole.ADMIN, UserRole.MANAGER);
   return isAdmin ? children : <ErrorPage />;
 }
 
@@ -47,8 +47,7 @@ export function ProtectedRoute({ isCustomersOnly, children }) {
   if (!sessionLoaded) return null;
 
   const isAdmissible = isCustomersOnly
-    ? isLoggedIn
-      && (user?.role === UserRole.USER || user?.role === UserRole.MANAGER)
+    ? isLoggedIn && (user?.role === UserRole.USER || user?.role === UserRole.MANAGER)
     : isLoggedIn;
 
   if (isAdmissible) return children;
