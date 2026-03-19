@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import base64
-from datetime import datetime, timezone
 from io import BytesIO
 
 from config import api, app, bcrypt, db
@@ -14,7 +13,7 @@ from flask import (
 )
 from flask_restful import Resource
 from helpers import find_falsey, find_req_fields, make_error, make_message
-from models import Account, FeeGuide, FeeGuideItem, ScheduleItem, User
+from models import FeeGuide, FeeGuideItem, User
 from namespace import Message as Msg
 from services.fee_guide_builder import build_fee_guide
 from services.load_data import load_procedures_into_db
@@ -38,9 +37,6 @@ def load_user():
 @app.errorhandler(ValueError)
 def handle_value_error(e):
     return make_response(jsonify({"error": str(e)}), 422)
-
-
-
 
 
 class AllFeeGuides(Resource):
@@ -154,8 +150,6 @@ class AllFeeGuides(Resource):
 api.add_resource(AllFeeGuides, "/fee-guides")
 
 
-
-
 class AllUsers(Resource):
     def post(self):
         if g.user:
@@ -184,8 +178,6 @@ class AllUsers(Resource):
 
 
 api.add_resource(AllUsers, "/users")
-
-
 
 
 class FeeGuidesByID(Resource):
@@ -299,8 +291,6 @@ class FeeGuideItemsByID(Resource):
 
 
 api.add_resource(FeeGuideItemsByID, "/fee-guide-items/<int:id>")
-
-
 
 
 class Session(Resource):
